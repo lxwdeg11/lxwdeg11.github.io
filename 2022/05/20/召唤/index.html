@@ -1,96 +1,59 @@
 <!DOCTYPE html>
-<html>
-<head>
+<!-- saved from url=(0121)file:///C:/Users/LXWDE_~1/AppData/Local/Temp/MicrosoftEdgeDownloads/761f5f96-c490-4a5b-b675-0c6035411f24/index%20(1).html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title></title>
-<meta charset="utf-8">
 
-<textarea id="input_text" style="width:300px;height:100px;"></textarea>
 
-<button style="width:150px;height:200px" onclick="connect()">召唤大狗子</button>
+</head>
+<body background="background_kevin.jpg" id="zhaohuan" style="text-align: center; padding: 5px; background-color:skyblue;">
+<textarea align="center" id="input_text" style="width:300px;height:100px;"></textarea>
+<br>
+<button align="center" style="width:150px;height:200px" onclick="connect()">召唤大狗子</button>
 <script type="text/javascript">
-		 $(document).click(function () {
-			connect();
-		});
+		
 		var socket;
         function connect() {
 			var temp=document.getElementById("input_text").value;
 			
-			
+	
+		
+		
+		
 			
 			// Create WebSocket connection.
-const socket = new WebSocket('ws://192.168.3.33:9999');
-
+const socket = new WebSocket('ws://222.68.135.141:10000');
+alert('222');
 
 socket.onopen = function(e) {
     console.log('WebSocket Opened. Sending "Hello"');
-    socket.send('Hello');
+    socket.send(temp);
+	alert('send');
   };
 
   socket.onmessage = function(e) {
     console.log('Received:', e.data);
   };
   
-socket.send('Hello Server!');
-alert("2！");
 
-// Connection opened
-socket.addEventListener('open', function (event) {
-	alert("3！");
-    socket.send('Hello Server!');
-	
-});
+
+
 
 // Listen for messages
 socket.addEventListener('message', function (event) {
-alert("3！");
+
     console.log('Message from server ', event.data);
 });
 
 
-            var host = "ws://" + "192.168.3.27:" + ":" + "9999" + "/"
-            socket = new WebSocket(host);
-            try {
-
-                socket.onopen = function (msg) {
-                    $("btnConnect").disabled = true;
-                    alert("连接成功！");
-                };
-
-                socket.onmessage = function (msg) {
-                    if (typeof msg.data == "string") {
-                        displayContent(msg.data);
-                    }
-                    else {
-                        alert("非文本消息");
-                    }
-                };
-
-                socket.onclose = function (msg) { alert("socket closed!") };
-            }
-            catch (ex) {
-				alert("连接失败！");
-                log(ex);
-            }
+            
         }
 
-        function send() {
-            var msg = $("sendText").value + '\0'
-            socket.send(msg);
-        }
-
-        window.onbeforeunload = function () {
-            try {
-                socket.close();
-                socket = null;
-            }
-            catch (ex) {
-            }
-        };
+        
 		
 </script>
-</head>
-<body>
 
 
-</body>
-</html>  
+
+
+
+  </body></html>
