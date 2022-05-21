@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!-- saved from url=(0121)file:///C:/Users/LXWDE_~1/AppData/Local/Temp/MicrosoftEdgeDownloads/761f5f96-c490-4a5b-b675-0c6035411f24/index%20(1).html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title></title>
+
+
+</head>
+<body background="background_kevin.jpg" id="zhaohuan" style="text-align: center; padding: 5px; background-color:skyblue;">
+<textarea align="center" id="input_text" style="width:300px;height:100px;"></textarea>
+<br>
+<button align="center" style="width:150px;height:200px" onclick="connect()">召唤大狗子</button>
+<script type="text/javascript">
+		
+		var socket;
+        function connect() {
+			var temp=document.getElementById("input_text").value;
+			
+	
+		
+		
+		
+			
+			// Create WebSocket connection.
+const socket = new WebSocket('ws://222.68.135.141:10000');
+alert('222');
+
+socket.onopen = function(e) {
+    console.log('WebSocket Opened. Sending "Hello"');
+    socket.send(temp);
+	alert('send');
+  };
+
+  socket.onmessage = function(e) {
+    console.log('Received:', e.data);
+  };
+  
+
+
+
+
+// Listen for messages
+socket.addEventListener('message', function (event) {
+
+    console.log('Message from server ', event.data);
+});
+
+
+            
+        }
+
+        
+		
+</script>
+
+
+
+
+
+  </body></html>
