@@ -8,7 +8,7 @@
 <body background="background_kevin.jpg" id="zhaohuan" style="text-align: center; padding: 5px; background-color:skyblue;">
 <textarea align="center" id="input_text" style="width:50px;height:200px;"></textarea>
 <br>
-<button align="center" style="width:150px;height:200px" onclick="btn_connect()">召唤大狗子7</button>
+<button align="center" style="width:150px;height:200px" onclick="btn_connect()">召唤大狗子8</button>
 <button align="center" style="width:150px;height:200px" onclick="drink_connect()">喝水</button>
 <script type="text/javascript">
 		
@@ -38,7 +38,7 @@
 		var wsConnection1 = new WebSocket("wss://222.68.135.141:8000");
 		wsConnection1.onopen = function () {
 			var socketMessageToServer1 = {};
-			socketMessageToServer1.text = temp;
+			socketMessageToServer1.text = "召唤大狗子：" + temp;
 			wsConnection1.send(JSON.stringify(socketMessageToServer1));
 			alert('已经发送消息给大狗子135');
 		};
@@ -50,7 +50,7 @@
 		var wsConnection2 = new WebSocket("wss://192.168.3.27:8000");
 		wsConnection2.onopen = function () {
 			var socketMessageToServer2 = {};
-			socketMessageToServer2.text = temp;
+			socketMessageToServer2.text = "召唤大狗子：" + temp;
 			wsConnection2.send(JSON.stringify(socketMessageToServer2));
 			alert('已经发送消息给大狗子3');
 		};
