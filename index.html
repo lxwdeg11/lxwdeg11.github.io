@@ -64,6 +64,51 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-nodejs实现wss-secure-websocket-服务器，且浏览器JavaScript实现wss-secure-websocket-客户端与之通信" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/05/24/nodejs%E5%AE%9E%E7%8E%B0wss-secure-websocket-%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%8C%E4%B8%94%E6%B5%8F%E8%A7%88%E5%99%A8JavaScript%E5%AE%9E%E7%8E%B0wss-secure-websocket-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E4%B9%8B%E9%80%9A%E4%BF%A1/" class="article-date">
+  <time datetime="2022-05-24T14:40:04.000Z" itemprop="datePublished">2022-05-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/05/24/nodejs%E5%AE%9E%E7%8E%B0wss-secure-websocket-%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%8C%E4%B8%94%E6%B5%8F%E8%A7%88%E5%99%A8JavaScript%E5%AE%9E%E7%8E%B0wss-secure-websocket-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E4%B9%8B%E9%80%9A%E4%BF%A1/">nodejs实现wss(secure websocket)服务器，且浏览器JavaScript实现wss(secure websocket)客户端与之通信</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><p>nodejs服务器代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">// curl -k https://localhost:8000/</span><br><span class="line">const https = require(&#x27;node:https&#x27;);</span><br><span class="line">const fs = require(&#x27;node:fs&#x27;);</span><br><span class="line"></span><br><span class="line">const options = &#123;</span><br><span class="line">  key: fs.readFileSync(&#x27;ssl/server.key&#x27;),</span><br><span class="line">  cert: fs.readFileSync(&#x27;ssl/server.cert&#x27;)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">secureServer = https.createServer(options, (req, res) =&gt; &#123;</span><br><span class="line">  res.writeHead(200);</span><br><span class="line">  res.end(&#x27;hello world\n&#x27;);</span><br><span class="line">&#125;).listen(8888);</span><br><span class="line"></span><br><span class="line">secureServer.address().address.replace(&quot;127.0.0.1&quot;, &quot;localhost&quot;)</span><br><span class="line"></span><br><span class="line">var ws = require(&#x27;ws&#x27;).Server;</span><br><span class="line">var wss = new ws(&#123;</span><br><span class="line">    server: secureServer,</span><br><span class="line">    autoAcceptConnections: true</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">wss.on(&#x27;connection&#x27;, function connection(ws) &#123;</span><br><span class="line">  ws.on(&#x27;message&#x27;, function incoming(message) &#123;</span><br><span class="line">    console.log(&#x27;received: %s&#x27;, message);</span><br><span class="line">    const fs = require(&#x27;fs&#x27;)</span><br><span class="line"></span><br><span class="line">    var t = new Date().getTime();</span><br><span class="line">    filename = &#x27;./message/&#x27; + t + &#x27;message.txt&#x27;</span><br><span class="line">   fs.writeFile(filename, message, err =&gt; &#123;</span><br><span class="line">   if (err) &#123;</span><br><span class="line">    console.error(err)</span><br><span class="line">    return</span><br><span class="line">   &#125;</span><br><span class="line">   //文件写入成功。</span><br><span class="line">&#125;)</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  ws.send(&#x27;something&#x27;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>浏览器JavaScript代码：</p>
+<p>？？？</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/05/24/nodejs%E5%AE%9E%E7%8E%B0wss-secure-websocket-%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%8C%E4%B8%94%E6%B5%8F%E8%A7%88%E5%99%A8JavaScript%E5%AE%9E%E7%8E%B0wss-secure-websocket-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E4%B9%8B%E9%80%9A%E4%BF%A1/" data-id="cl3k9n6d200004cvk7neuc8p2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/" rel="tag">Javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/" rel="tag">nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/websocket/" rel="tag">websocket</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wss/" rel="tag">wss</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-python实现wss-secure-websocket-的服务器和客户端" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/05/24/python%E5%AE%9E%E7%8E%B0wss-secure-websocket-%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF/" class="article-date">
@@ -93,6 +138,9 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># WSS (WS over TLS) server example, with a self-signed certificate</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">import</span> pathlib</span><br><span class="line"><span class="keyword">import</span> ssl</span><br><span class="line"><span class="keyword">import</span> websockets</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">hello</span>(<span class="params">websocket, path</span>):</span><br><span class="line">    name = <span class="keyword">await</span> websocket.recv()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;&lt; <span class="subst">&#123;name&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">    greeting = <span class="string">f&quot;Hello <span class="subst">&#123;name&#125;</span>!&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">await</span> websocket.send(greeting)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;&gt; <span class="subst">&#123;greeting&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)</span><br><span class="line"><span class="comment">#localhost_pem = pathlib.Path(__file__).with_name(&quot;localhost.pem&quot;)</span></span><br><span class="line"><span class="comment">#ssl_context.load_cert_chain(localhost_pem)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#start_server = websockets.serve(</span></span><br><span class="line"> <span class="comment">#   hello, &quot;localhost&quot;, 8765, ssl=ssl_context</span></span><br><span class="line"><span class="comment">#)</span></span><br><span class="line"></span><br><span class="line">path_cert = pathlib.Path(__file__).with_name(<span class="string">&quot;cert.pem&quot;</span>)</span><br><span class="line">path_key = pathlib.Path(__file__).with_name(<span class="string">&quot;key.pem&quot;</span>)</span><br><span class="line">ssl_context.load_cert_chain(path_cert, keyfile=path_key)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Listening for connection...&quot;</span>)</span><br><span class="line">start_server = websockets.serve(hello, <span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">8765</span>, ssl=ssl_context)</span><br><span class="line"></span><br><span class="line">asyncio.get_event_loop().run_until_complete(start_server)</span><br><span class="line">asyncio.get_event_loop().run_forever()</span><br></pre></td></tr></table></figure></li>
 <li><p>python客户端代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># WSS (WS over TLS) client example, with a self-signed certificate</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">import</span> pathlib</span><br><span class="line"><span class="keyword">import</span> ssl</span><br><span class="line"><span class="keyword">import</span> websockets</span><br><span class="line"></span><br><span class="line"><span class="comment">#ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)</span></span><br><span class="line"><span class="comment">#ssl_context.load_verify_locations(</span></span><br><span class="line"> <span class="comment">#   pathlib.Path(__file__).with_name(&#x27;server.pem&#x27;))</span></span><br><span class="line"></span><br><span class="line">ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)</span><br><span class="line">path_cert = pathlib.Path(__file__).with_name(<span class="string">&quot;cert.pem&quot;</span>)</span><br><span class="line">ssl_context.load_verify_locations(path_cert)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">hello</span>():</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> websockets.connect(</span><br><span class="line">            <span class="string">&#x27;wss://127.0.0.1:8765&#x27;</span>, ssl=ssl_context) <span class="keyword">as</span> websocket:</span><br><span class="line">        name = <span class="built_in">input</span>(<span class="string">&quot;What&#x27;s your name? &quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">await</span> websocket.send(name)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;&gt; <span class="subst">&#123;name&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">        greeting = <span class="keyword">await</span> websocket.recv()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;&lt; <span class="subst">&#123;greeting&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">asyncio.get_event_loop().run_until_complete(hello())</span><br></pre></td></tr></table></figure></li>
+<li><p>参考链接：</p>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/61944853/python-websockets-create-pem-file">ssl - Python Websockets create pem file - Stack Overflow</a></p>
+</li>
 </ul>
 
       
@@ -469,50 +517,6 @@
 
 
   
-    <article id="post-技术问题还是得用英文搜索，搜不到的话优化下英文关键词" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/05/13/%E6%8A%80%E6%9C%AF%E9%97%AE%E9%A2%98%E8%BF%98%E6%98%AF%E5%BE%97%E7%94%A8%E8%8B%B1%E6%96%87%E6%90%9C%E7%B4%A2%EF%BC%8C%E6%90%9C%E4%B8%8D%E5%88%B0%E7%9A%84%E8%AF%9D%E4%BC%98%E5%8C%96%E4%B8%8B%E8%8B%B1%E6%96%87%E5%85%B3%E9%94%AE%E8%AF%8D/" class="article-date">
-  <time datetime="2022-05-13T14:12:25.000Z" itemprop="datePublished">2022-05-13</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/05/13/%E6%8A%80%E6%9C%AF%E9%97%AE%E9%A2%98%E8%BF%98%E6%98%AF%E5%BE%97%E7%94%A8%E8%8B%B1%E6%96%87%E6%90%9C%E7%B4%A2%EF%BC%8C%E6%90%9C%E4%B8%8D%E5%88%B0%E7%9A%84%E8%AF%9D%E4%BC%98%E5%8C%96%E4%B8%8B%E8%8B%B1%E6%96%87%E5%85%B3%E9%94%AE%E8%AF%8D/">技术问题还是得用英文搜索，搜不到的话优化下英文关键词</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>office 365登录报0xCAA80000错误，搜了很久，找了很多中文网站，最后还是在这里找到解决方法了。</p>
-<p><strong>关闭代理就好了！</strong></p>
-<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/office/troubleshoot/activation/0xcaa70007-and-0xcaa80000">Microsoft 365 Apps activation error codes 0xCAA70007 and 0xCAA80000 - Office | Microsoft Docs</a></p>
-<p>1、技术问题尽量用英文搜索</p>
-<p>2、搜索关键词要优化</p>
-<p>搜到上面的链接是用这个关键词搜到的，0xcaa80000 error office</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/05/13/%E6%8A%80%E6%9C%AF%E9%97%AE%E9%A2%98%E8%BF%98%E6%98%AF%E5%BE%97%E7%94%A8%E8%8B%B1%E6%96%87%E6%90%9C%E7%B4%A2%EF%BC%8C%E6%90%9C%E4%B8%8D%E5%88%B0%E7%9A%84%E8%AF%9D%E4%BC%98%E5%8C%96%E4%B8%8B%E8%8B%B1%E6%96%87%E5%85%B3%E9%94%AE%E8%AF%8D/" data-id="cl34ixcvr0000yovke0ed4quo" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9D%82%E8%B0%88/" rel="tag">杂谈</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -538,7 +542,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Arm64/" rel="tag">Arm64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BLOCK-IO/" rel="tag">BLOCK IO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Busybox/" rel="tag">Busybox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80/" rel="tag">C语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hello-World/" rel="tag">Hello World</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LINUX-KERNEL/" rel="tag">LINUX KERNEL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pycharm/" rel="tag">Pycharm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SSH/" rel="tag">SSH</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/adb/" rel="tag">adb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/edge/" rel="tag">edge</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/for-test/" rel="tag">for test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ftpd/" rel="tag">ftpd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/" rel="tag">github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo%E7%AE%A1%E7%90%86/" rel="tag">hexo管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httpd/" rel="tag">httpd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyinstaller/" rel="tag">pyinstaller</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/websocket/" rel="tag">websocket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82%E8%B0%88/" rel="tag">杂谈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" rel="tag">浏览器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%9B%98/" rel="tag">网盘</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Arm64/" rel="tag">Arm64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BLOCK-IO/" rel="tag">BLOCK IO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Busybox/" rel="tag">Busybox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80/" rel="tag">C语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hello-World/" rel="tag">Hello World</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/" rel="tag">Javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LINUX-KERNEL/" rel="tag">LINUX KERNEL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pycharm/" rel="tag">Pycharm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SSH/" rel="tag">SSH</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/adb/" rel="tag">adb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/edge/" rel="tag">edge</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/for-test/" rel="tag">for test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ftpd/" rel="tag">ftpd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/" rel="tag">github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo%E7%AE%A1%E7%90%86/" rel="tag">hexo管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httpd/" rel="tag">httpd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/" rel="tag">nodejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyinstaller/" rel="tag">pyinstaller</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/websocket/" rel="tag">websocket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wss/" rel="tag">wss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82%E8%B0%88/" rel="tag">杂谈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" rel="tag">浏览器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%9B%98/" rel="tag">网盘</a></li></ul>
     </div>
   </div>
 
@@ -548,7 +552,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Arm64/" style="font-size: 10px;">Arm64</a> <a href="/tags/BLOCK-IO/" style="font-size: 10px;">BLOCK IO</a> <a href="/tags/Busybox/" style="font-size: 10px;">Busybox</a> <a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 10px;">C语言</a> <a href="/tags/Hello-World/" style="font-size: 20px;">Hello World</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/LINUX-KERNEL/" style="font-size: 10px;">LINUX KERNEL</a> <a href="/tags/Pycharm/" style="font-size: 10px;">Pycharm</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/adb/" style="font-size: 10px;">adb</a> <a href="/tags/blog/" style="font-size: 10px;">blog</a> <a href="/tags/edge/" style="font-size: 10px;">edge</a> <a href="/tags/for-test/" style="font-size: 10px;">for test</a> <a href="/tags/ftpd/" style="font-size: 10px;">ftpd</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/hexo%E7%AE%A1%E7%90%86/" style="font-size: 10px;">hexo管理</a> <a href="/tags/httpd/" style="font-size: 10px;">httpd</a> <a href="/tags/pyinstaller/" style="font-size: 10px;">pyinstaller</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/websocket/" style="font-size: 10px;">websocket</a> <a href="/tags/%E6%9D%82%E8%B0%88/" style="font-size: 10px;">杂谈</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 10px;">浏览器</a> <a href="/tags/%E7%BD%91%E7%9B%98/" style="font-size: 10px;">网盘</a>
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Arm64/" style="font-size: 10px;">Arm64</a> <a href="/tags/BLOCK-IO/" style="font-size: 10px;">BLOCK IO</a> <a href="/tags/Busybox/" style="font-size: 10px;">Busybox</a> <a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 10px;">C语言</a> <a href="/tags/Hello-World/" style="font-size: 20px;">Hello World</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Javascript/" style="font-size: 10px;">Javascript</a> <a href="/tags/LINUX-KERNEL/" style="font-size: 10px;">LINUX KERNEL</a> <a href="/tags/Pycharm/" style="font-size: 10px;">Pycharm</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/adb/" style="font-size: 10px;">adb</a> <a href="/tags/blog/" style="font-size: 10px;">blog</a> <a href="/tags/edge/" style="font-size: 10px;">edge</a> <a href="/tags/for-test/" style="font-size: 10px;">for test</a> <a href="/tags/ftpd/" style="font-size: 10px;">ftpd</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/hexo%E7%AE%A1%E7%90%86/" style="font-size: 10px;">hexo管理</a> <a href="/tags/httpd/" style="font-size: 10px;">httpd</a> <a href="/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/tags/pyinstaller/" style="font-size: 10px;">pyinstaller</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/websocket/" style="font-size: 15px;">websocket</a> <a href="/tags/wss/" style="font-size: 10px;">wss</a> <a href="/tags/%E6%9D%82%E8%B0%88/" style="font-size: 10px;">杂谈</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 10px;">浏览器</a> <a href="/tags/%E7%BD%91%E7%9B%98/" style="font-size: 10px;">网盘</a>
     </div>
   </div>
 
@@ -570,6 +574,10 @@
       <ul>
         
           <li>
+            <a href="/2022/05/24/nodejs%E5%AE%9E%E7%8E%B0wss-secure-websocket-%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%8C%E4%B8%94%E6%B5%8F%E8%A7%88%E5%99%A8JavaScript%E5%AE%9E%E7%8E%B0wss-secure-websocket-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E4%B9%8B%E9%80%9A%E4%BF%A1/">nodejs实现wss(secure websocket)服务器，且浏览器JavaScript实现wss(secure websocket)客户端与之通信</a>
+          </li>
+        
+          <li>
             <a href="/2022/05/24/python%E5%AE%9E%E7%8E%B0wss-secure-websocket-%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF/">python实现wss(secure websocket)的服务器和客户端</a>
           </li>
         
@@ -583,10 +591,6 @@
         
           <li>
             <a href="/2022/05/22/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%9C%80%E6%96%B0%E4%B8%8D%E9%99%90%E9%80%9F%E4%B8%8B%E8%BD%BD%E6%96%B9%E6%B3%95/">百度网盘最新不限速下载方法</a>
-          </li>
-        
-          <li>
-            <a href="/2022/05/20/%E5%8F%AC%E5%94%A4---%E8%BF%99%E4%B8%AA%E4%B8%8D%E8%A6%81/">召唤</a>
           </li>
         
       </ul>
