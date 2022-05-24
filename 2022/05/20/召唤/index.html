@@ -26,7 +26,7 @@
 		var wsConnection = new WebSocket("wss://192.168.1.3:8000");
 		wsConnection.onopen = function () {
 			var socketMessageToServer = {};
-			socketMessageToServer.text = temp;
+			socketMessageToServer.text = "召唤大狗子：" + temp;
 			wsConnection.send(JSON.stringify(socketMessageToServer));
 			alert('已经发送消息给大狗子');
 		};
@@ -61,7 +61,7 @@
 		
 		
 		
-	return;
+		return;
 
 
 		
