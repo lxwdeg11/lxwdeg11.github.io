@@ -8,26 +8,58 @@
 <body background="background_kevin.jpg" id="zhaohuan" style="text-align: center; padding: 5px; background-color:skyblue;">
 <textarea align="center" id="input_text" style="width:50px;height:200px;"></textarea>
 <br>
-<button align="center" style="width:150px;height:200px" onclick="btn_connect()">召唤大狗子2</button>
+<button align="center" style="width:150px;height:200px" onclick="btn_connect()">召唤大狗子3</button>
 <button align="center" style="width:150px;height:200px" onclick="drink_connect()">喝水</button>
 <script type="text/javascript">
 		
 		var socket;
         function connect(message) {
 			var temp=document.getElementById("input_text").value;
-			
+	var times = 0;
+	var server_list =new Array(); 
 	
-		var wsConnection = new WebSocket("wss://222.68.135.141:8888");
-wsConnection.onopen = function () {
-  //alert("I'm the client and I'm listening on an open socket!");
-    var socketMessageToServer = {};
-    //socketMessageToServer.text = "I'm the client and I'm listening on an established socket!";
-	socketMessageToServer.text = temp;
-    // Send an initial message to the server
-    wsConnection.send(JSON.stringify(socketMessageToServer));
-	alert('已经发送消息给大狗子');
-};
-return;
+	server_list[0]="wss://192.168.1.3:8000";
+	server_list[1]="wss://222.68.135.141:8000";
+	server_list[2]="wss://192.168.3.27:8000";
+	
+	
+		var wsConnection = new WebSocket("wss://192.168.1.3:8000");
+		wsConnection.onopen = function () {
+			var socketMessageToServer = {};
+			socketMessageToServer.text = temp;
+			wsConnection.send(JSON.stringify(socketMessageToServer));
+			alert('已经发送消息给大狗子');
+		};
+		wsConnection.onerror = function(event) {
+			alert("无法连接到服务器" + "192.168.1.3:8000");
+		}
+		
+		var wsConnection1 = new WebSocket("wss://222.68.135.141:8000");
+		wsConnection1.onopen = function () {
+			var socketMessageToServer = {};
+			socketMessageToServer.text = temp;
+			wsConnection1.send(JSON.stringify(socketMessageToServer));
+			alert('已经发送消息给大狗子');
+		};
+		wsConnection1.onerror = function(event) {
+			alert("无法连接到服务器" + "222.68.135.141:8000");
+		}
+		
+		var wsConnection2 = new WebSocket("wss://192.168.3.27:8000");
+		wsConnection2.onopen = function () {
+			var socketMessageToServer = {};
+			socketMessageToServer.text = temp;
+			wsConnection2.send(JSON.stringify(socketMessageToServer));
+			alert('已经发送消息给大狗子');
+		};
+		wsConnection2.onerror = function(event) {
+			alert("无法连接到服务器" + "192.168.3.27:8000");
+		}
+		
+		
+		
+	return;
+
 
 		
 		
@@ -36,13 +68,15 @@ return;
 				var times = 0;
 				var server_ok = -1;
 				var error_times = 0;
-				
-				console.log(message);
-				while (times <= 2) {
-					var server_list =new Array(); 
-					server_list[0]='wss://192.168.3.27:8000';     
+				var server_list =new Array(); 
+				server_list[0]='wss://192.168.3.27:8000';     
 					server_list[1]='wss://192.168.3.27:8000';
 					server_list[2]='wss://192.168.3.27:8000';
+					
+				console.log(message);
+				while (times <= 2) {
+					
+					
 				//alert(server_list[times]);
 				const socket = new WebSocket(server_list[times]);
 				
