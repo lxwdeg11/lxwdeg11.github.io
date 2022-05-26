@@ -5,15 +5,22 @@
   
 
   
-  <title>Archives: 2020 | 莫失莫忘的博客</title>
+  <title>莫失莫忘的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
+  <meta name="description" content="安卓堆栈： 虚拟机Dalvik和ART众所周知，Android系统是以Linux为内核构建的。Google为了降低应用的开发难度，并将其适配到不同硬件配置的设备上，在Linux内核之上构建了一个虚拟机，Android应用使用java开发，运行在虚拟机之上。 Dalvik就是Android4.4及之前使用的虚拟机，它使用的是JIT（Just-In-Time）技术来进行代码转译，每次执行应用的时候，D">
+<meta property="og:type" content="article">
 <meta property="og:title" content="莫失莫忘的博客">
-<meta property="og:url" content="http://example.com/archives/2020/index.html">
+<meta property="og:url" content="http://example.com/2021/09/16/%E5%AE%89%E5%8D%93%E8%99%9A%E6%8B%9F%E6%9C%BADalvik%E5%92%8CART/index.html">
 <meta property="og:site_name" content="莫失莫忘的博客">
+<meta property="og:description" content="安卓堆栈： 虚拟机Dalvik和ART众所周知，Android系统是以Linux为内核构建的。Google为了降低应用的开发难度，并将其适配到不同硬件配置的设备上，在Linux内核之上构建了一个虚拟机，Android应用使用java开发，运行在虚拟机之上。 Dalvik就是Android4.4及之前使用的虚拟机，它使用的是JIT（Just-In-Time）技术来进行代码转译，每次执行应用的时候，D">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://source.android.com/images/android_framework_details.png">
+<meta property="og:image" content="d:/appdata/Roaming/Typora/typora-user-images/image-20210916214253504.png">
+<meta property="article:published_time" content="2021-09-16T13:16:59.426Z">
+<meta property="article:modified_time" content="2021-09-16T13:43:26.588Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://source.android.com/images/android_framework_details.png">
   
     <link rel="alternate" href="/atom.xml" title="莫失莫忘的博客" type="application/atom+xml">
   
@@ -62,59 +69,57 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-modulenotfounderror:">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/02/26/contextlib/" class="archive-article-date">
-  <time datetime="2020-02-26T15:32:45.000Z" itemprop="datePublished">Feb 26</time>
+        <section id="main"><article id="post-安卓虚拟机Dalvik和ART" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/09/16/%E5%AE%89%E5%8D%93%E8%99%9A%E6%8B%9F%E6%9C%BADalvik%E5%92%8CART/" class="article-date">
+  <time datetime="2021-09-16T13:16:59.426Z" itemprop="datePublished">2021-09-16</time>
 </a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/02/26/contextlib/">&#39;contextlib&#39;</a>
-    </h1>
-  
-
-    </header>
+    
   </div>
-</article>
-  
+  <div class="article-inner">
     
     
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/02/24/pyinstallerr-error/" class="archive-article-date">
-  <time datetime="2020-02-24T05:19:41.000Z" itemprop="datePublished">Feb 24</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/02/24/pyinstallerr-error/">pyinstallerr_error</a>
-    </h1>
-  
+        <h2 id="安卓堆栈："><a href="#安卓堆栈：" class="headerlink" title="安卓堆栈："></a>安卓堆栈：</h2><p><img src="https://source.android.com/images/android_framework_details.png" alt="Android 框架详情"></p>
+<h2 id="虚拟机Dalvik和ART"><a href="#虚拟机Dalvik和ART" class="headerlink" title="虚拟机Dalvik和ART"></a>虚拟机Dalvik和ART</h2><p>众所周知，Android系统是以Linux为内核构建的。Google为了降低应用的开发难度，并将其适配到不同硬件配置的设备上，在Linux内核之上构建了一个虚拟机，Android应用使用java开发，运行在虚拟机之上。</p>
+<p>Dalvik就是Android4.4及之前使用的虚拟机，它使用的是JIT（Just-In-Time）技术来进行代码转译，每次执行应用的时候，Dalvik将程序的代码编译为机器语言执行。随着硬件水平的不断发展以及人们对更高性能的需求，Dalvik虚拟机的不足日益突出。而应运而生的ART(Android RunTime)虚拟机，其处理机制根本上的区别是：它采用AOT(Ahead-Of-Time)技术，会在应用程序安装时就转换成机器语言，不再在执行时解释，从而优化了应用运行的速度。在内存管理方面，ART也有比较大的改进，对内存分配和回收都做了算法优化，降低了内存碎片化程度，回收时间也得以缩短。</p>
+<p>Dalvik是应用执行的时候翻译为机器语言。</p>
+<p>ART是应用安装时候翻译为机器语言。</p>
+<h2 id="apk运行过程"><a href="#apk运行过程" class="headerlink" title="apk运行过程"></a>apk运行过程</h2><p><img src="D:\appdata\Roaming\Typora\typora-user-images\image-20210916214253504.png" alt="image-20210916214253504"></p>
+<p>ART虚拟机会把应用弄成ELF可执行文件。</p>
 
-    </header>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/09/16/%E5%AE%89%E5%8D%93%E8%99%9A%E6%8B%9F%E6%9C%BADalvik%E5%92%8CART/" data-id="cl3mi7je200009cvkh5ae9rpd" class="article-share-link">Share</a>
+      
+      
+    </footer>
   </div>
-</article>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/05/09/hello-world/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Hello World
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/2020/02/26/contextlib/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">&#39;contextlib&#39;</div>
+    </a>
   
+</nav>
 
+  
+</article>
 
 </section>
         
