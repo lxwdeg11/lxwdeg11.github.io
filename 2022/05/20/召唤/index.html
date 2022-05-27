@@ -21,7 +21,7 @@
 		var wsConnection = new WebSocket("wss://www.lixuewen.ml:8000");
 		wsConnection.onopen = function () {
 			var socketMessageToServer = {};
-			socketMessageToServer.text = "召唤大狗子：" + temp;
+			socketMessageToServer.text = "召唤大狗子：" + temp + message;
 			wsConnection.send(JSON.stringify(socketMessageToServer));
 			alert('已经发送消息给大狗子1');
 		};
