@@ -18,7 +18,7 @@
 			var temp=document.getElementById("input_text").value;
 	
 			
-		var wsConnection = new WebSocket("wss://www.lixuewen.ml:8000");
+		var wsConnection = new WebSocket("ws://www.lixuewen.ml:10000");
 		wsConnection.onopen = function () {
 			var socketMessageToServer = {};
 			socketMessageToServer.text = "召唤大狗子：" + temp + message;
@@ -26,7 +26,7 @@
 			alert('已经发送消息给大狗子1');
 		};
 		wsConnection.onerror = function(event) {
-			alert("无法连接到服务器" + "www.lixuewen.ml:8000");
+			alert("无法连接到服务器" + "www.lixuewen.ml:8999");
 			;
 		}
 		socket.onmessage = function(e) {

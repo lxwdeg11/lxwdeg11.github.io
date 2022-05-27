@@ -5,14 +5,20 @@
   
 
   
-  <title>Tag: 浏览器 | 莫失莫忘的博客</title>
+  <title>python建立socket server(websocket server) | 莫失莫忘的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="莫失莫忘的博客">
-<meta property="og:url" content="http://example.com/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/index.html">
+  <meta name="description" content="12安装这个库pip3 install websocket_server    123456789101112131415161718192021from websocket_server import WebsocketServer# Called for every client connecting (after handshake)def new_client(client, server">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python建立socket server(websocket server)">
+<meta property="og:url" content="http://example.com/2022/05/27/python%E5%BB%BA%E7%AB%8Bsocket-server-websocket-server/index.html">
 <meta property="og:site_name" content="莫失莫忘的博客">
+<meta property="og:description" content="12安装这个库pip3 install websocket_server    123456789101112131415161718192021from websocket_server import WebsocketServer# Called for every client connecting (after handshake)def new_client(client, server">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-05-27T10:55:26.000Z">
+<meta property="article:modified_time" content="2022-05-27T10:56:45.903Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="socket">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="莫失莫忘的博客" type="application/atom+xml">
@@ -62,40 +68,59 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2022" class="archive-year">2022</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/05/09/edge-login-issue/" class="archive-article-date">
-  <time datetime="2022-05-09T14:38:37.000Z" itemprop="datePublished">May 9</time>
+        <section id="main"><article id="post-python建立socket-server-websocket-server" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/05/27/python%E5%BB%BA%E7%AB%8Bsocket-server-websocket-server/" class="article-date">
+  <time datetime="2022-05-27T10:55:26.000Z" itemprop="datePublished">2022-05-27</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/05/09/edge-login-issue/">登录edge浏览器，报错0x80190001解决方法</a>
+    <h1 class="article-title" itemprop="name">
+      python建立socket server(websocket server)
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">安装这个库</span><br><span class="line">pip3 install websocket_server</span><br></pre></td></tr></table></figure>
 
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> websocket_server <span class="keyword">import</span> WebsocketServer</span><br><span class="line"></span><br><span class="line"><span class="comment"># Called for every client connecting (after handshake)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">new_client</span>(<span class="params">client, server</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;New client connected and was given id %d&quot;</span> % client[<span class="string">&#x27;id&#x27;</span>])</span><br><span class="line">    server.send_message_to_all(<span class="string">&quot;Hey all, a new client has joined us&quot;</span>)</span><br><span class="line"><span class="comment"># Called for every client disconnecting</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">client_left</span>(<span class="params">client, server</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Client(%d) disconnected&quot;</span> % client[<span class="string">&#x27;id&#x27;</span>])</span><br><span class="line"><span class="comment"># Called when a client sends a message</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">message_received</span>(<span class="params">client, server, message</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(message) &gt; <span class="number">200</span>:</span><br><span class="line">        message = message[:<span class="number">200</span>]+<span class="string">&#x27;..&#x27;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Client(%d) said: %s&quot;</span> % (client[<span class="string">&#x27;id&#x27;</span>], message))</span><br><span class="line">    <span class="built_in">print</span>(message)</span><br><span class="line"></span><br><span class="line">server = WebsocketServer(host=<span class="string">&quot;www.lixuewen.ml&quot;</span>, port = <span class="number">10000</span>)</span><br><span class="line">server.set_fn_new_client(new_client)</span><br><span class="line">server.set_fn_client_left(client_left)</span><br><span class="line">server.set_fn_message_received(message_received)</span><br><span class="line">server.run_forever()</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/05/27/python%E5%BB%BA%E7%AB%8Bsocket-server-websocket-server/" data-id="cl3obxdrd0000q8vkcdw016b2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/socket/" rel="tag">socket</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/05/25/Linux%E5%92%8CWindows%E4%B8%8A%E9%9D%A2shell%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E5%AF%B9%E6%AF%94/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Linux和Windows上面shell基本操作对比</div>
+    </a>
+  
+</nav>
+
+  
+</article>
 
 </section>
         
