@@ -64,6 +64,57 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-安卓开发，app通知添加按钮" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/05/16/%E5%AE%89%E5%8D%93%E5%BC%80%E5%8F%91%EF%BC%8Capp%E9%80%9A%E7%9F%A5%E6%B7%BB%E5%8A%A0%E6%8C%89%E9%92%AE/" class="article-date">
+  <time datetime="2022-05-16T01:29:35.000Z" itemprop="datePublished">2022-05-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%AE%89%E5%8D%93%E5%BC%80%E5%8F%91/">安卓开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/05/16/%E5%AE%89%E5%8D%93%E5%BC%80%E5%8F%91%EF%BC%8Capp%E9%80%9A%E7%9F%A5%E6%B7%BB%E5%8A%A0%E6%8C%89%E9%92%AE/">安卓开发，app通知添加按钮</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><p>创建BroadcastReceiver类在按下按钮时接收数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Reply_Receiver</span> <span class="keyword">extends</span> <span class="title class_">BroadcastReceiver</span> &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onReceive</span><span class="params">(Context context, Intent intent)</span> &#123;</span><br><span class="line"></span><br><span class="line">            <span class="type">String</span> <span class="variable">log</span> <span class="operator">=</span> <span class="string">&quot;URI: &quot;</span> + intent.toUri(Intent.URI_INTENT_SCHEME);</span><br><span class="line">            <span class="type">String</span> <span class="variable">message</span> <span class="operator">=</span> <span class="string">&quot;reply成功&quot;</span>;</span><br><span class="line"></span><br><span class="line">            System.out.println(intent.getExtras());</span><br><span class="line"></span><br><span class="line">            Toast.makeText(context, message, Toast.LENGTH_LONG).show();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>新增一个Intent，.setAction里面添加唯一的动作id字符串，putExtra放入想传到BroadcastReceiver里面的数据，新增一个pendingIntent类。</p>
+<p>然后注册BroadcastReceiver类，其IntentFilter的id和上面唯一的动作id字符串要一样。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Intent</span> <span class="variable">reply_intent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Intent</span>();</span><br><span class="line">reply_intent.setAction(<span class="string">&quot;reply&quot;</span>);</span><br><span class="line">reply_intent.putExtra(<span class="string">&quot;key&quot;</span>, <span class="string">&quot;any data you want to send when button is pressed&quot;</span>);</span><br><span class="line"><span class="type">PendingIntent</span> <span class="variable">pendingIntent</span> <span class="operator">=</span> PendingIntent.getBroadcast(<span class="built_in">this</span>, <span class="number">0</span>, reply_intent, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">下面代码放在on_create里面</span><br><span class="line"><span class="keyword">private</span> Reply_Receiver br;</span><br><span class="line">br = <span class="keyword">new</span> <span class="title class_">Reply_Receiver</span>();</span><br><span class="line"><span class="type">IntentFilter</span> <span class="variable">filter2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">IntentFilter</span>(<span class="string">&quot;reply&quot;</span>);</span><br><span class="line">registerReceiver(br, filter2);</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onDestroy</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onDestroy();</span><br><span class="line">        <span class="comment">//取消动态网络变化广播接收器的注册</span></span><br><span class="line">        unregisterReceiver(br);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>在NotificationCompat.Builder里面增加</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.addAction(R.drawable.ic_reply, getString(R.string.reply), pendingIntent);</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/05/16/%E5%AE%89%E5%8D%93%E5%BC%80%E5%8F%91%EF%BC%8Capp%E9%80%9A%E7%9F%A5%E6%B7%BB%E5%8A%A0%E6%8C%89%E9%92%AE/" data-id="cl382aipk0000kwvk82j5fx0g" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/" rel="tag">Java</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-安卓apk开发，app发送通知时播放特定声音" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/05/15/%E5%AE%89%E5%8D%93apk%E5%BC%80%E5%8F%91%EF%BC%8Capp%E5%8F%91%E9%80%81%E9%80%9A%E7%9F%A5%E6%97%B6%E6%92%AD%E6%94%BE%E7%89%B9%E5%AE%9A%E5%A3%B0%E9%9F%B3/" class="article-date">
@@ -487,104 +538,6 @@
 
 
   
-    <article id="post-block" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/05/09/block/" class="article-date">
-  <time datetime="2022-05-09T14:37:12.000Z" itemprop="datePublished">2022-05-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/05/09/block/">block</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[TOC]</p>
-<h1 id="block层在内核中结构"><a href="#block层在内核中结构" class="headerlink" title="block层在内核中结构"></a>block层在内核中结构</h1><p><img src="D:%5Cappdata%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20220526202533888.png" alt="image-20220526202533888"></p>
-<h3 id="内存管理与block："><a href="#内存管理与block：" class="headerlink" title="内存管理与block："></a>内存管理与block：</h3><p>用户态page fault</p>
-<p>脏页回写</p>
-<p>swap out</p>
-<p>都会产生IO到block层</p>
-<h3 id="cgroups-in-block"><a href="#cgroups-in-block" class="headerlink" title="cgroups in block"></a>cgroups in block</h3><p>三种情况没有支持cgroups：no scheduler, mq-deadline, and kyber  </p>
-<h1 id="不同IO-control机制对比："><a href="#不同IO-control机制对比：" class="headerlink" title="不同IO control机制对比："></a>不同IO control机制对比：</h1><p><img src="D:%5Cappdata%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20220526203239408.png" alt="image-20220526203239408"></p>
-<h1 id="biovecs"><a href="#biovecs" class="headerlink" title="biovecs"></a>biovecs</h1><p>bio提交后biovecs就不能修改了，随着IO完成而修改的是struct bvec_iter</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">bvec_iter</span> &#123;</span></span><br><span class="line">	<span class="type">sector_t</span>		bi_sector;	<span class="comment">/* device address in 512 byte</span></span><br><span class="line"><span class="comment">						   sectors */</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span>		bi_size;	<span class="comment">/* residual I/O count */</span></span><br><span class="line"></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span>		bi_idx;		<span class="comment">/* current index into bvl_vec */</span></span><br><span class="line"></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span>            bi_bvec_done;	<span class="comment">/* number of bytes completed in</span></span><br><span class="line"><span class="comment">						   current bvec */</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>驱动代码不应该直接使用biovecs，而应该用bio_iovec() and bio_iter_iovec()</p>
-<h3 id="bio-for-each-segment改为需要一个bvec-iter参数，而不是整数参数"><a href="#bio-for-each-segment改为需要一个bvec-iter参数，而不是整数参数" class="headerlink" title="bio_for_each_segment改为需要一个bvec_iter参数，而不是整数参数"></a>bio_for_each_segment改为需要一个bvec_iter参数，而不是整数参数</h3><p>通过bio_advance_iter函数，递增bvec_iter</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">bio_advance</span><span class="params">(<span class="keyword">struct</span> bio *bio, <span class="type">unsigned</span> bytes)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (bio_integrity(bio))</span><br><span class="line">		bio_integrity_advance(bio, bytes);</span><br><span class="line"></span><br><span class="line">	bio_advance_iter(bio, &amp;bio-&gt;bi_iter, bytes);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>有个更低层的，bvec_iter_advance，使用biovec指针作为参数，而不是bio指针：</p>
-<h3 id="用于block的integrity-code"><a href="#用于block的integrity-code" class="headerlink" title="用于block的integrity code"></a>用于block的integrity code</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">struct bio_vec &#123;</span><br><span class="line">	struct page	*bv_page;</span><br><span class="line">	unsigned int	bv_len;//可能跨页面，例如长度是8K</span><br><span class="line">	unsigned int	bv_offset; //可能跨页面，例如offset是4K + 1</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>有一个迭代器，而让真正的biovecs保存不变，有很多好处。</p>
-<h3 id="一次迭代一个页："><a href="#一次迭代一个页：" class="headerlink" title="一次迭代一个页："></a>一次迭代一个页：</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bio_for_each_segment()</span><br><span class="line">bio_for_each_segment_all()</span><br></pre></td></tr></table></figure>
-
-<h3 id="一次迭代多个页："><a href="#一次迭代多个页：" class="headerlink" title="一次迭代多个页："></a>一次迭代多个页：</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bio_for_each_bvec()</span><br><span class="line">bio_for_each_bvec_all()</span><br><span class="line">rq_for_each_bvec()</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">introduce <span class="title function_">bio_for_each_bvec</span><span class="params">()</span> to iterate over multipage bvec <span class="keyword">for</span> splitting</span><br><span class="line">	bio and mapping sg</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">introduce bio_for_each_bvec() to iterate over multipage bvec for splitting</span><br><span class="line">	bio and mapping sg</span><br></pre></td></tr></table></figure>
-</blockquote>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keep current bio_for_each_segment*() to itereate over singlepage bvec</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="block层的work"><a href="#block层的work" class="headerlink" title="block层的work"></a>block层的work</h1><h2 id="对应的work-function：blk-mq-run-work-fn"><a href="#对应的work-function：blk-mq-run-work-fn" class="headerlink" title="对应的work function：blk_mq_run_work_fn"></a>对应的work function：blk_mq_run_work_fn</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">blk_mq_run_work_fn</span><span class="params">(<span class="keyword">struct</span> work_struct *work)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">blk_mq_hw_ctx</span> *<span class="title">hctx</span>;</span></span><br><span class="line"></span><br><span class="line">	hctx = container_of(work, <span class="keyword">struct</span> blk_mq_hw_ctx, run_work.work);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * If we are stopped, don&#x27;t run the queue.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">if</span> (blk_mq_hctx_stopped(hctx))</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">	__blk_mq_run_hw_queue(hctx);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="work初始化"><a href="#work初始化" class="headerlink" title="work初始化"></a>work初始化</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INIT_DELAYED_WORK(&amp;hctx-&gt;run_work, blk_mq_run_work_fn);</span><br></pre></td></tr></table></figure>
-
-<p>每个hctx都有一个自己的run_work，所有这些work，共用一个workqueue：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">Controlling structure to kblockd</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">workqueue_struct</span> *<span class="title">kblockd_workqueue</span>;</span></span><br></pre></td></tr></table></figure>
-
-<p><a href="#workqueue%E4%BC%98%E5%8C%96">workqueue优化</a></p>
-<h2 id="block的worker运行的cpu："><a href="#block的worker运行的cpu：" class="headerlink" title="block的worker运行的cpu："></a>block的worker运行的cpu：</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * It&#x27;d be great if the workqueue API had a way to pass</span></span><br><span class="line"><span class="comment"> * in a mask and had some smarts for more clever placement.</span></span><br><span class="line"><span class="comment"> * For now we just round-robin here, switching for every</span></span><br><span class="line"><span class="comment"> * BLK_MQ_CPU_WORK_BATCH queued items.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">blk_mq_hctx_next_cpu</span><span class="params">(<span class="keyword">struct</span> blk_mq_hw_ctx *hctx)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">bool</span> tried = <span class="literal">false</span>;</span><br><span class="line">	<span class="type">int</span> next_cpu = hctx-&gt;next_cpu;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (hctx-&gt;<span class="built_in">queue</span>-&gt;nr_hw_queues == <span class="number">1</span>)</span><br><span class="line">		<span class="keyword">return</span> WORK_CPU_UNBOUND;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (--hctx-&gt;next_cpu_batch &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">select_cpu:</span><br><span class="line">		next_cpu = cpumask_next_and(next_cpu, hctx-&gt;cpumask,</span><br><span class="line">				cpu_online_mask);</span><br><span class="line">		<span class="keyword">if</span> (next_cpu &gt;= nr_cpu_ids)</span><br><span class="line">			next_cpu = blk_mq_first_mapped_cpu(hctx);</span><br><span class="line">		hctx-&gt;next_cpu_batch = BLK_MQ_CPU_WORK_BATCH;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Do unbound schedule if we can&#x27;t find a online CPU for this hctx,</span></span><br><span class="line"><span class="comment">	 * and it should only happen in the path of handling CPU DEAD.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">if</span> (!cpu_online(next_cpu)) &#123;</span><br><span class="line">		<span class="keyword">if</span> (!tried) &#123;</span><br><span class="line">			tried = <span class="literal">true</span>;</span><br><span class="line">			<span class="keyword">goto</span> select_cpu;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">		 * Make sure to re-select CPU next time once after CPUs</span></span><br><span class="line"><span class="comment">		 * in hctx-&gt;cpumask become online again.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		hctx-&gt;next_cpu = next_cpu;</span><br><span class="line">		hctx-&gt;next_cpu_batch = <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">return</span> WORK_CPU_UNBOUND;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	hctx-&gt;next_cpu = next_cpu;</span><br><span class="line">	<span class="keyword">return</span> next_cpu;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id=""><a href="#" class="headerlink" title=""></a></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kblockd_mod_delayed_work_on(blk_mq_hctx_next_cpu(hctx), &amp;hctx-&gt;run_work,</span><br><span class="line">				    msecs_to_jiffies(msecs));</span><br></pre></td></tr></table></figure>
-
-<p>如果queue的硬件队列只有一个，那这个worker运行在WORK_CPU_UNBOUND上，也就是不绑定特定的cpu。</p>
-<p>否则，一个cpu上运行<strong>BLK_MQ_CPU_WORK_BATCH</strong>次数后，就换下一个cpu（round robin策略）。</p>
-<p>当然，可供选择的cpu的范围：同时在<strong>hctx-&gt;cpumask</strong>和cpu_online_mask里面的cpu。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">next_cpu = cpumask_next_and(next_cpu, hctx-&gt;cpumask,</span><br><span class="line">				cpu_online_mask);</span><br></pre></td></tr></table></figure>
-
-
-
-<p>hctx-&gt;cpu_mask在blk_mq_map_swqueue函数里面设置</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cpumask_set_cpu(i, hctx-&gt;cpumask)</span><br></pre></td></tr></table></figure>
-
-<h2 id="什么情况运行work？"><a href="#什么情况运行work？" class="headerlink" title="什么情况运行work？"></a>什么情况运行work？</h2><h2 id="什么情况停止work？"><a href="#什么情况停止work？" class="headerlink" title="什么情况停止work？"></a>什么情况停止work？</h2><h1 id="block-passthrough-req流程"><a href="#block-passthrough-req流程" class="headerlink" title="block passthrough req流程"></a>block passthrough req流程</h1><h3 id="end-io流程"><a href="#end-io流程" class="headerlink" title="end_io流程"></a>end_io流程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">rq-&gt;end_io赋值为了blk_end_sync_rq</span><br><span class="line"></span><br><span class="line">DECLARE_COMPLETION_ONSTACK(wait);</span><br><span class="line">rq-&gt;end_io_data = &amp;wait;</span><br><span class="line"></span><br><span class="line">__blk_mq_end_request里面：</span><br><span class="line">if (rq-&gt;end_io) &#123;</span><br><span class="line">		rq_qos_done(rq-&gt;q, rq);</span><br><span class="line">		rq-&gt;end_io(rq, error);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">		blk_mq_free_request(rq);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * blk_end_sync_rq - executes a completion event on a request</span><br><span class="line"> * @rq: request to complete</span><br><span class="line"> * @error: end I/O status of the request</span><br><span class="line"> */</span><br><span class="line">static void blk_end_sync_rq(struct request *rq, blk_status_t error)</span><br><span class="line">&#123;</span><br><span class="line">	struct completion *waiting = rq-&gt;end_io_data;</span><br><span class="line"></span><br><span class="line">	rq-&gt;end_io_data = (void *)(uintptr_t)error;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	 * complete last, if this is a stack request the process (and thus</span><br><span class="line">	 * the rq pointer) could be invalid right after this complete()</span><br><span class="line">	 */</span><br><span class="line">	complete(waiting);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="哪些种类IO有rq-gt-end-io指针？"><a href="#哪些种类IO有rq-gt-end-io指针？" class="headerlink" title="哪些种类IO有rq-&gt;end_io指针？"></a>哪些种类IO有rq-&gt;end_io指针？</h1><h1 id="可能优化点："><a href="#可能优化点：" class="headerlink" title="可能优化点："></a>可能优化点：</h1><h2 id="workqueue优化"><a href="#workqueue优化" class="headerlink" title="workqueue优化"></a>workqueue优化</h2><h3 id="采用多个workqueue"><a href="#采用多个workqueue" class="headerlink" title="采用多个workqueue"></a>采用多个workqueue</h3><h4 id="不同优先级的IO，采用不同优先级的workqueue？"><a href="#不同优先级的IO，采用不同优先级的workqueue？" class="headerlink" title="不同优先级的IO，采用不同优先级的workqueue？"></a>不同优先级的IO，采用不同优先级的workqueue？</h4>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/05/09/block/" data-id="cl2yty06q0001r8vkaenx88u6" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/BLOCK-IO/" rel="tag">BLOCK IO</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LINUX-KERNEL/" rel="tag">LINUX KERNEL</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -642,6 +595,10 @@
       <ul>
         
           <li>
+            <a href="/2022/05/29/Linux-kernel-news/">Linux kernel news</a>
+          </li>
+        
+          <li>
             <a href="/2022/05/27/python%E5%BB%BA%E7%AB%8Bsocket-server-websocket-server/">python建立socket server(websocket server)</a>
           </li>
         
@@ -655,10 +612,6 @@
         
           <li>
             <a href="/2022/05/24/python%E5%AE%9E%E7%8E%B0wss-secure-websocket-%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF/">python实现wss(secure websocket)的服务器和客户端</a>
-          </li>
-        
-          <li>
-            <a href="/2022/05/24/Git-HEAD-detached-from-XXX%E6%97%B6%E5%80%99%E7%9A%84%E6%8F%90%E4%BA%A4%E5%A6%82%E4%BD%95%E4%BF%9D%E5%AD%98/">Git HEAD detached from XXX时候的提交如何保存</a>
           </li>
         
       </ul>
