@@ -15,6 +15,9 @@
 		attempt_merge --> attempt_back_merge
 		attempt_merge --> attempt_front_merge
 		attempt_merge --> blk_attempt_req_merge
+		blk_attempt_req_merge --> elv_attempt_insert_merge --> blk_mq_sched_try_insert_merge --> dd_insert_request
+	
+		
     </div>
 
     And here is another:
