@@ -1,0 +1,28 @@
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+
+    Here is one mermaid diagram:
+    <div class="mermaid">
+		graph BT;
+
+		elv_merge_requests["void elv_merge_requests(struct request_queue *q, struct request *rq,
+						 struct request *next)"];
+		attempt_merge["static struct request *attempt_merge(struct request_queue *q,
+							 struct request *req, struct request *next)"]
+		elv_merge_requests --> attempt_merge
+		attempt_merge --> attempt_back_merge
+		attempt_merge --> attempt_front_merge
+		attempt_merge --> blk_attempt_req_merge
+    </div>
+
+    And here is another:
+    <div class="mermaid">
+      graph TD
+      A[Client] -->|tcp_123| B(Load Balancer)
+      B -->|tcp_456| C[Server1]
+      B -->|tcp_456| D[Server2]
+    </div>
+  </body>
+</html>
