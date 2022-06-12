@@ -64,6 +64,120 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-安卓使用FUSE" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/11/%E5%AE%89%E5%8D%93%E4%BD%BF%E7%94%A8FUSE/" class="article-date">
+  <time datetime="2022-06-11T03:38:58.000Z" itemprop="datePublished">2022-06-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/11/%E5%AE%89%E5%8D%93%E4%BD%BF%E7%94%A8FUSE/">安卓使用FUSE</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Android使用fuse文件系统来做到灵活的权限管理"><a href="#Android使用fuse文件系统来做到灵活的权限管理" class="headerlink" title="Android使用fuse文件系统来做到灵活的权限管理"></a>Android使用fuse文件系统来做到灵活的权限管理</h1><h2 id="Android对于外置存储权限管理的需求"><a href="#Android对于外置存储权限管理的需求" class="headerlink" title="Android对于外置存储权限管理的需求"></a>Android对于外置存储权限管理的需求</h2><p>Android对于外置存储的管理，需要实现以下几个目标：</p>
+<p>1、读写外置存储需要 android.permission.READ_EXTERNAL_STORAGE和android.permission.WRITE_EXTERNAL_STORAGE， 这两个权限是运行时权限，可以动态的授予和撤销， 所以主存储目录的权限管理需要动态支持。</p>
+<p>2、主存储目录下的${userid}/Android/obb, ${userid}/Android/data, ${userid}/Android/media 下的应用程序包名目录不需要读写存储卡权限。比如 com.androiud.ss.ugc.aweme这个应用程序读写 ${userid}/Android/data/com.androiud.ss.ugc.aweme 目录是不需要申请权限的。<br>但是不同应用对应的${userid}/Android/data/${package} 目录是权限隔离的，不能相互访问的。</p>
+<p>3、除${userid}/Android/obb/${package}目录外，相同应用程序(相同包名)不同用户( ${userid} )的目录也是权限隔离的。但是${userid}/Android/obb/${package}是跨用户( ${userid} ) 共享的。</p>
+<h2 id="fuse文件系统作用"><a href="#fuse文件系统作用" class="headerlink" title="fuse文件系统作用"></a>fuse文件系统作用</h2><ul>
+<li>灵活的文件位置管理（<strong>路径的转换、映射</strong>）</li>
+<li>权限管理</li>
+</ul>
+<h2 id="FUSE文件系统存在的问题"><a href="#FUSE文件系统存在的问题" class="headerlink" title="FUSE文件系统存在的问题"></a>FUSE文件系统存在的问题</h2><h3 id="性能问题"><a href="#性能问题" class="headerlink" title="性能问题"></a>性能问题</h3><p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9kNGhvWUpseE9qTmliQVNnSEJsQ3BadjFVcU9qVVUyNnRpYXR2TVNXM2dBVThCSU15UE1xUXp3WVlXaWM5ejQwbmlhWnVvVkNYNWpVSThwRGhCQ1hyWUNWMEEvNjQw?x-oss-process=image/format,png" alt="img"></p>
+<p>具体分析可得每一个读写命令都将经过六次的用户态和内核态的转换：1)用户空间的应用将系统调用传给FUSE内核驱动；2)FUSE内核驱动通知FUSE用户态守护程序有新的操作命令，用户态守护程序从dev/fuse读取命令；3)守护程序分析命令并下传给底层文件系统；4)底层文件系统执行操作，并将数据返回给FUSE守护程序；5)守护程序将结果通过dev/fuse传给FUSE内核驱动；6)FUSE内核驱动将结果返回给上层应用结束。</p>
+<h2 id="Android-FUSE实现"><a href="#Android-FUSE实现" class="headerlink" title="Android FUSE实现"></a>Android FUSE实现</h2><p>下面我们拿使用/data分区来模拟主存储的情况进行说明。</p>
+<ol>
+<li><p>为了实现动态的外置存储权限，Android会挂载三个目录到/dev/fuse来对应同一个外置存储，三个目录分别是/mnt/runtime/default/${label}， /mnt/runtime/read/${label}，/mnt/runtime/write/${label}, 这三个目录代表不同的权限，当一个应用进程取得了读外置存储的权限，那么它将使用 /mnt/runtime/read/${label} 目录来操作外置存储，当一个应用程序取得了写外置存储的权限，那么它将使用/mnt/runtime/write/${label}目录来操作外置存储。当一个应用程序没有获取操作外置存储的权限，将使用/mnt/runtime/default/${label}目录来操作主存储。三个fuse目录最终都会作用于外置存储的media目录，只不过对目录下的可进行的操作权限是不同的。Android 的FUSE file-system daemon会根据应用程序进程使用的fuse目录来决定是否可以读写外置存储的media目录下的数据。</p>
+</li>
+<li><p><strong>（某个包读取自己${user_id}/Android/data/${package_name} 下目录，如何不需要权限）</strong>通过读取/data/system/packages_list.xml的内容，来维护程序包名和uid的关系，针对外置存储下 ${user_id}/Android 目录的动态权限做处理，基本思路就是当应用程序读写${user_id}/Android/media|obb|data/${package_name} 下文件的时候，把该目录下的文件属主都改成应用程序的uid，作为文件的属主基本上就获得了文件的读写权限，这样应用程序就可以不需要获取外置存储读写权限来读写${user_id}/Android/media|obb|data/${package_name} 下的文件了（因为应用程序就是属主）。</p>
+</li>
+<li><p>${userid}/Android/obb, ${userid}/Android/data, ${userid}/Android/media 下的${package} 权限管理则根据/data/system/packages.list文件中的内容来完成。 如果一个应用程序操作fuse目录，FUSE file-system daemon处理文件请求的时候可以获取操作文件的进程的uid，并根据/data/system/packages.list下的内容找到uid对应的包名，如果进程操作的包名和uid相对应，则允许操作，否则拒绝操作。</p>
+</li>
+</ol>
+<p>（安卓的不同应用，对应于linux的不同user）</p>
+<ol start="4">
+<li>不同userid（安卓的不同用户）对应的相同应用的uid不同，根据 2中规则，即可实现 相同应用程序(相同包名)不同用户( ${userid} )的目录的权限隔离。</li>
+</ol>
+<p><img src="https://img-blog.csdnimg.cn/20200809102048917.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dvYWkxMTAxMjAxMzA=,size_16,color_FFFFFF,t_70#pic_center" alt="img"></p>
+<p>如上图所示，Android的sdcard进程中有四个线程， 其中main线程在创建了其他三个线程后调用watch_package_list()函数，来读取/data/system/packages_list.xml文件的内容。sdcard进程通过读取/data/system/packages_list.xml的内容，来维护程序包名和uid的关系，针对外置存储下 ${user_id}/Android 目录的动态权限做处理，基本思路就是当应用程序读写${user_id}/Android/media|obb|data/${package_name} 下文件的时候，把该目录下的文件属主都改成应用程序的uid，作为文件的属主基本上就获得了文件的读写权限，这样应用程序就可以不需要获取外置存储读写权限来读写${user_id}/Android/media|obb|data/${package_name} 下的文件了（因为应用程序就是属主）。</p>
+<p>ackages.list文件内容。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">com.android.soundrecorder 10021 0 /data/data/com.android.soundrecorder</span><br><span class="line">com.android.sdksetup 10020 0 /data/data/com.android.sdksetup</span><br><span class="line">com.android.launcher 10005 0 /data/data/com.android.launcher</span><br><span class="line">com.android.defcontainer 10009 0 /data/data/com.android.defcontainer</span><br><span class="line">com.android.smoketest 10044 0 /data/data/com.android.smoketest</span><br></pre></td></tr></table></figure>
+
+
+
+<pre><code>    其他三个线程，每个线程负责一个fuse目录的读写请求。thread_default线程负责/mnt/runtime/default/$&#123;label&#125; 目录的读写，thread_read 负责 /mnt/runtime/read/$&#123;label&#125;目录的读写， thread_write负责 /mnt/runtime/read/$&#123;label&#125;目录的读写，三个线程都是接收fuse driver的文件操作请求，然后将请求转化为对source_path 文件夹的读写。
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/11/%E5%AE%89%E5%8D%93%E4%BD%BF%E7%94%A8FUSE/" data-id="cl4avabv70001ecvkhj8c7kxt" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-5W2H学习一项技术" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/11/5W2H%E5%AD%A6%E4%B9%A0%E4%B8%80%E9%A1%B9%E6%8A%80%E6%9C%AF/" class="article-date">
+  <time datetime="2022-06-11T03:23:36.000Z" itemprop="datePublished">2022-06-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/11/5W2H%E5%AD%A6%E4%B9%A0%E4%B8%80%E9%A1%B9%E6%8A%80%E6%9C%AF/">如何学习一项技术</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这项技术</p>
+<ul>
+<li>是什么？技术核心是什么？ what</li>
+<li>是解决什么问题的？为什么其他技术不行？why</li>
+<li>是如何解决问题的？（设计思路）how</li>
+<li>什么时候用到？when</li>
+<li>谁来用这个技术？who</li>
+<li>在哪里用到？ where</li>
+<li>技术的开销大吗？how much</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/11/5W2H%E5%AD%A6%E4%B9%A0%E4%B8%80%E9%A1%B9%E6%8A%80%E6%9C%AF/" data-id="cl4avabv00000ecvk0ox33b17" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-安卓存储栈" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/06/09/%E5%AE%89%E5%8D%93%E5%AD%98%E5%82%A8%E6%A0%88/" class="article-date">
@@ -90,7 +204,7 @@
 <h3 id="framework层"><a href="#framework层" class="headerlink" title="framework层"></a>framework层</h3><p>StorageManager</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/os/storage/StorageManager.java</span><br></pre></td></tr></table></figure>
 
-<h3 id="java-libcore"><a href="#java-libcore" class="headerlink" title="java libcore"></a>java libcore</h3><blockquote>
+<h3 id="java-libcore——位于Android-runtime里的core-libraries"><a href="#java-libcore——位于Android-runtime里的core-libraries" class="headerlink" title="java libcore——位于Android runtime里的core libraries"></a>java libcore——位于Android runtime里的core libraries</h3><blockquote>
 <p>According to this slide deck from 2016, Libcore is Google’s implementation of some core Java libraries such as java.net, java.util, java.icu (Unicode), java.math, java.reflect, and possibly more. Libcore also allows for POSIX system calls from Java.Libcore’s master branch can be found here. Most of Google’s implementation is found in folder luni , but libcore also mixes with Oracle code. For example, Oracle’s JNI implementation from OpenJDK is used in Android in folder ojluni. So libcore replaces some functionality from OpenJDK, but not all.<br><strong>有个java.io.file在路径：</strong></p>
 </blockquote>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">libcore/ojluni/src/main/java/java/io/File.java</span><br></pre></td></tr></table></figure>
@@ -116,11 +230,7 @@
 <p>上层不一定调用fopen，可能直接调open系统调用。<br>例如fopen：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">FILE* fopen(const char* file, const char* mode) &#123;</span><br><span class="line">  int mode_flags;</span><br><span class="line">  int flags = __sflags(mode, &amp;mode_flags);</span><br><span class="line">  if (flags == 0) return nullptr;</span><br><span class="line"></span><br><span class="line">  int fd = open(file, mode_flags, DEFFILEMODE);</span><br><span class="line">  if (fd == -1) &#123;</span><br><span class="line">    return nullptr;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  FILE* fp = __FILE_init(__sfp(), fd, flags);</span><br><span class="line">  if (fp == nullptr) &#123;</span><br><span class="line">    ErrnoRestorer errno_restorer;</span><br><span class="line">    close(fd);</span><br><span class="line">    return nullptr;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>里面的open就会最终调用到open系统调用。<br>libc里面调用的系统调用，根据这个文件里的系统调用列表，会用python脚本生成头文件：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">https://android.googlesource.com/platform/bionic/+/refs/heads/master/libc/SYSCALLS.TXT</span><br><span class="line"></span><br><span class="line"># This file is used to automatically generate bionic&#x27;s system call stubs.</span><br><span class="line">#</span><br><span class="line"># Each non-blank, non-comment line has the following format:</span><br><span class="line">#</span><br><span class="line"># return_type func_name[|alias_list][:syscall_name[:socketcall_id]]([parameter_list]) arch_list</span><br><span class="line">#</span><br><span class="line"># where:</span><br><span class="line">#       arch_list ::= &quot;all&quot; | arches</span><br><span class="line">#       arches    ::= arch |  arch &quot;,&quot; arches</span><br><span class="line">#       arch      ::= &quot;arm&quot; | &quot;arm64&quot; | &quot;x86&quot; | &quot;x86_64&quot; | &quot;lp32&quot; | &quot;lp64&quot;</span><br><span class="line">#</span><br><span class="line"># Note:</span><br><span class="line">#      - syscall_name corresponds to the name of the syscall, which may differ from</span><br><span class="line">#        the exported function name (example: the exit syscall is implemented by the _exit()</span><br><span class="line">#        function, which is not the same as the standard C exit() function which calls it)</span><br><span class="line">#</span><br><span class="line">#      - alias_list is optional comma separated list of function aliases.</span><br><span class="line">#</span><br><span class="line">#      - The call_id parameter, given that func_name and syscall_name have</span><br><span class="line">#        been provided, allows the user to specify dispatch style syscalls.</span><br><span class="line">#        For example, socket() syscall on i386 actually becomes:</span><br><span class="line">#          socketcall(__NR_socket, 1, *(rest of args on stack)).</span><br><span class="line">#</span><br><span class="line">#      - Each parameter type is assumed to be stored in 32 bits.</span><br><span class="line">#</span><br><span class="line"># This file is processed by a python script named gensyscalls.py, run via</span><br><span class="line"># genrules in Android.bp.</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>引用</p>
-</blockquote>
-
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//android.googlesource.com/platform/bionic/+/refs/heads/master/libc/SYSCALLS.TXT</span></span><br><span class="line"></span><br><span class="line"># This file is used to automatically generate bionic<span class="number">&#x27;</span>s system call stubs.</span><br><span class="line">#</span><br><span class="line"># Each non-blank, non-comment line has the following format:</span><br><span class="line">#</span><br><span class="line"># return_type func_name[|alias_list][:syscall_name[:socketcall_id]]([parameter_list]) arch_list</span><br><span class="line">#</span><br><span class="line"><span class="meta"># where:</span></span><br><span class="line">#       arch_list ::= <span class="string">&quot;all&quot;</span> | arches</span><br><span class="line"><span class="meta">#       arches    ::= arch |  arch <span class="string">&quot;,&quot;</span> arches</span></span><br><span class="line"><span class="meta">#       arch      ::= <span class="string">&quot;arm&quot;</span> | <span class="string">&quot;arm64&quot;</span> | <span class="string">&quot;x86&quot;</span> | <span class="string">&quot;x86_64&quot;</span> | <span class="string">&quot;lp32&quot;</span> | <span class="string">&quot;lp64&quot;</span></span></span><br><span class="line">#</span><br><span class="line"># Note:</span><br><span class="line">#      - syscall_name corresponds to the name of the syscall, which may differ from</span><br><span class="line"><span class="meta">#        the exported function name (example: the exit syscall is implemented by the _exit()</span></span><br><span class="line"><span class="meta">#        function, which is not the same as the standard C exit() function which calls it)</span></span><br><span class="line">#</span><br><span class="line">#      - alias_list is optional comma separated <span class="built_in">list</span> of function aliases.</span><br><span class="line">#</span><br><span class="line">#      - The call_id parameter, given that func_name and syscall_name have</span><br><span class="line"><span class="meta">#        been provided, allows the user to specify dispatch style syscalls.</span></span><br><span class="line">#        For example, socket() syscall on i386 actually becomes:</span><br><span class="line"><span class="meta">#          socketcall(__NR_socket, 1, *(rest of args on stack)).</span></span><br><span class="line">#</span><br><span class="line">#      - Each parameter type is assumed to be stored in <span class="number">32</span> bits.</span><br><span class="line">#</span><br><span class="line"># This file is processed by a python script named gensyscalls.py, run via</span><br><span class="line"><span class="meta"># genrules in Android.bp.</span></span><br></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
@@ -469,102 +579,11 @@
 
 
   
-    <article id="post-百度网盘最新不限速下载方法" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/05/22/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%9C%80%E6%96%B0%E4%B8%8D%E9%99%90%E9%80%9F%E4%B8%8B%E8%BD%BD%E6%96%B9%E6%B3%95/" class="article-date">
-  <time datetime="2022-05-22T08:43:23.000Z" itemprop="datePublished">2022-05-22</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/05/22/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%9C%80%E6%96%B0%E4%B8%8D%E9%99%90%E9%80%9F%E4%B8%8B%E8%BD%BD%E6%96%B9%E6%B3%95/">百度网盘最新不限速下载方法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>2022-05-22测试可用，下载速度达到29MB/s</p>
-<ul>
-<li><p>浏览器安装tampermonkey</p>
-<ul>
-<li><p>tampermonkey安装这个脚本：</p>
-<p><a target="_blank" rel="noopener" href="https://greasyfork.org/zh-CN/scripts/418182-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E7%AE%80%E6%98%93%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B-%E7%9B%B4%E9%93%BE%E4%B8%8B%E8%BD%BD%E5%A4%8D%E6%B4%BB%E7%89%88">百度网盘简易下载助手（直链下载复活版） (greasyfork.org)</a></p>
-</li>
-</ul>
-</li>
-<li><p>百度网盘分享链接复制到<a target="_blank" rel="noopener" href="https://jx.jixia.ink/#/jxdo">极下解析 (jixia.ink)</a>里去解析获取直链</p>
-<ul>
-<li>极下最新网址看这里<a target="_blank" rel="noopener" href="https://wz.jixia.icu/">极下解析 (jixia.icu)</a></li>
-</ul>
-</li>
-<li><p>获取到的直链用IDM下载，UA需要改为netdisk;11.22.2</p>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/05/22/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%9C%80%E6%96%B0%E4%B8%8D%E9%99%90%E9%80%9F%E4%B8%8B%E8%BD%BD%E6%96%B9%E6%B3%95/" data-id="cl3h23hi900029svk3gv15wir" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BD%91%E7%9B%98/" rel="tag">网盘</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-召唤---这个不要" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/05/20/%E5%8F%AC%E5%94%A4---%E8%BF%99%E4%B8%AA%E4%B8%8D%E8%A6%81/" class="article-date">
-  <time datetime="2022-05-20T10:58:22.000Z" itemprop="datePublished">2022-05-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/05/20/%E5%8F%AC%E5%94%A4---%E8%BF%99%E4%B8%AA%E4%B8%8D%E8%A6%81/">召唤</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/05/20/%E5%8F%AC%E5%94%A4---%E8%BF%99%E4%B8%AA%E4%B8%8D%E8%A6%81/" data-id="cl3h23hhy00009svk78z72ev8" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -617,6 +636,14 @@
       <ul>
         
           <li>
+            <a href="/2022/06/11/%E5%AE%89%E5%8D%93%E4%BD%BF%E7%94%A8FUSE/">安卓使用FUSE</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/11/5W2H%E5%AD%A6%E4%B9%A0%E4%B8%80%E9%A1%B9%E6%8A%80%E6%9C%AF/">如何学习一项技术</a>
+          </li>
+        
+          <li>
             <a href="/2022/06/09/%E5%AE%89%E5%8D%93%E5%AD%98%E5%82%A8%E6%A0%88/">安卓存储栈</a>
           </li>
         
@@ -626,14 +653,6 @@
         
           <li>
             <a href="/2022/05/27/python%E5%BB%BA%E7%AB%8Bsocket-server-websocket-server/">python建立socket server(websocket server)</a>
-          </li>
-        
-          <li>
-            <a href="/2022/05/25/Linux%E5%92%8CWindows%E4%B8%8A%E9%9D%A2shell%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E5%AF%B9%E6%AF%94/">Linux和Windows上面shell基本操作对比</a>
-          </li>
-        
-          <li>
-            <a href="/2022/05/24/nodejs%E5%AE%9E%E7%8E%B0wss-secure-websocket-%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%8C%E4%B8%94%E6%B5%8F%E8%A7%88%E5%99%A8JavaScript%E5%AE%9E%E7%8E%B0wss-secure-websocket-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E4%B9%8B%E9%80%9A%E4%BF%A1/">nodejs实现wss(secure websocket)服务器，且浏览器JavaScript实现wss(secure websocket)客户端与之通信</a>
           </li>
         
       </ul>

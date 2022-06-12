@@ -7,16 +7,16 @@
   
   <title>安卓存储栈 | 莫失莫忘的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="安卓软件栈 framework层StorageManager 1frameworks&#x2F;base&#x2F;core&#x2F;java&#x2F;android&#x2F;os&#x2F;storage&#x2F;StorageManager.java  java libcore According to this slide deck from 2016, Libcore is Google’s implementation of some core J">
+  <meta name="description" content="安卓软件栈 framework层StorageManager 1frameworks&#x2F;base&#x2F;core&#x2F;java&#x2F;android&#x2F;os&#x2F;storage&#x2F;StorageManager.java  java libcore——位于Android runtime里的core libraries According to this slide deck from 2016, Libcore is Goo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="安卓存储栈">
 <meta property="og:url" content="http://example.com/2022/06/09/%E5%AE%89%E5%8D%93%E5%AD%98%E5%82%A8%E6%A0%88/index.html">
 <meta property="og:site_name" content="莫失莫忘的博客">
-<meta property="og:description" content="安卓软件栈 framework层StorageManager 1frameworks&#x2F;base&#x2F;core&#x2F;java&#x2F;android&#x2F;os&#x2F;storage&#x2F;StorageManager.java  java libcore According to this slide deck from 2016, Libcore is Google’s implementation of some core J">
+<meta property="og:description" content="安卓软件栈 framework层StorageManager 1frameworks&#x2F;base&#x2F;core&#x2F;java&#x2F;android&#x2F;os&#x2F;storage&#x2F;StorageManager.java  java libcore——位于Android runtime里的core libraries According to this slide deck from 2016, Libcore is Goo">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://developer.android.com/guide/platform/images/android-stack_2x.png?hl=zh-cn">
 <meta property="article:published_time" content="2022-06-09T13:35:01.000Z">
-<meta property="article:modified_time" content="2022-06-09T13:39:33.797Z">
+<meta property="article:modified_time" content="2022-06-09T13:52:20.666Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="Android">
 <meta property="article:tag" content="Storage">
@@ -96,7 +96,7 @@
 <h3 id="framework层"><a href="#framework层" class="headerlink" title="framework层"></a>framework层</h3><p>StorageManager</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/os/storage/StorageManager.java</span><br></pre></td></tr></table></figure>
 
-<h3 id="java-libcore"><a href="#java-libcore" class="headerlink" title="java libcore"></a>java libcore</h3><blockquote>
+<h3 id="java-libcore——位于Android-runtime里的core-libraries"><a href="#java-libcore——位于Android-runtime里的core-libraries" class="headerlink" title="java libcore——位于Android runtime里的core libraries"></a>java libcore——位于Android runtime里的core libraries</h3><blockquote>
 <p>According to this slide deck from 2016, Libcore is Google’s implementation of some core Java libraries such as java.net, java.util, java.icu (Unicode), java.math, java.reflect, and possibly more. Libcore also allows for POSIX system calls from Java.Libcore’s master branch can be found here. Most of Google’s implementation is found in folder luni , but libcore also mixes with Oracle code. For example, Oracle’s JNI implementation from OpenJDK is used in Android in folder ojluni. So libcore replaces some functionality from OpenJDK, but not all.<br><strong>有个java.io.file在路径：</strong></p>
 </blockquote>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">libcore/ojluni/src/main/java/java/io/File.java</span><br></pre></td></tr></table></figure>
@@ -122,11 +122,7 @@
 <p>上层不一定调用fopen，可能直接调open系统调用。<br>例如fopen：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">FILE* fopen(const char* file, const char* mode) &#123;</span><br><span class="line">  int mode_flags;</span><br><span class="line">  int flags = __sflags(mode, &amp;mode_flags);</span><br><span class="line">  if (flags == 0) return nullptr;</span><br><span class="line"></span><br><span class="line">  int fd = open(file, mode_flags, DEFFILEMODE);</span><br><span class="line">  if (fd == -1) &#123;</span><br><span class="line">    return nullptr;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  FILE* fp = __FILE_init(__sfp(), fd, flags);</span><br><span class="line">  if (fp == nullptr) &#123;</span><br><span class="line">    ErrnoRestorer errno_restorer;</span><br><span class="line">    close(fd);</span><br><span class="line">    return nullptr;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>里面的open就会最终调用到open系统调用。<br>libc里面调用的系统调用，根据这个文件里的系统调用列表，会用python脚本生成头文件：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">https://android.googlesource.com/platform/bionic/+/refs/heads/master/libc/SYSCALLS.TXT</span><br><span class="line"></span><br><span class="line"># This file is used to automatically generate bionic&#x27;s system call stubs.</span><br><span class="line">#</span><br><span class="line"># Each non-blank, non-comment line has the following format:</span><br><span class="line">#</span><br><span class="line"># return_type func_name[|alias_list][:syscall_name[:socketcall_id]]([parameter_list]) arch_list</span><br><span class="line">#</span><br><span class="line"># where:</span><br><span class="line">#       arch_list ::= &quot;all&quot; | arches</span><br><span class="line">#       arches    ::= arch |  arch &quot;,&quot; arches</span><br><span class="line">#       arch      ::= &quot;arm&quot; | &quot;arm64&quot; | &quot;x86&quot; | &quot;x86_64&quot; | &quot;lp32&quot; | &quot;lp64&quot;</span><br><span class="line">#</span><br><span class="line"># Note:</span><br><span class="line">#      - syscall_name corresponds to the name of the syscall, which may differ from</span><br><span class="line">#        the exported function name (example: the exit syscall is implemented by the _exit()</span><br><span class="line">#        function, which is not the same as the standard C exit() function which calls it)</span><br><span class="line">#</span><br><span class="line">#      - alias_list is optional comma separated list of function aliases.</span><br><span class="line">#</span><br><span class="line">#      - The call_id parameter, given that func_name and syscall_name have</span><br><span class="line">#        been provided, allows the user to specify dispatch style syscalls.</span><br><span class="line">#        For example, socket() syscall on i386 actually becomes:</span><br><span class="line">#          socketcall(__NR_socket, 1, *(rest of args on stack)).</span><br><span class="line">#</span><br><span class="line">#      - Each parameter type is assumed to be stored in 32 bits.</span><br><span class="line">#</span><br><span class="line"># This file is processed by a python script named gensyscalls.py, run via</span><br><span class="line"># genrules in Android.bp.</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>引用</p>
-</blockquote>
-
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//android.googlesource.com/platform/bionic/+/refs/heads/master/libc/SYSCALLS.TXT</span></span><br><span class="line"></span><br><span class="line"># This file is used to automatically generate bionic<span class="number">&#x27;</span>s system call stubs.</span><br><span class="line">#</span><br><span class="line"># Each non-blank, non-comment line has the following format:</span><br><span class="line">#</span><br><span class="line"># return_type func_name[|alias_list][:syscall_name[:socketcall_id]]([parameter_list]) arch_list</span><br><span class="line">#</span><br><span class="line"><span class="meta"># where:</span></span><br><span class="line">#       arch_list ::= <span class="string">&quot;all&quot;</span> | arches</span><br><span class="line"><span class="meta">#       arches    ::= arch |  arch <span class="string">&quot;,&quot;</span> arches</span></span><br><span class="line"><span class="meta">#       arch      ::= <span class="string">&quot;arm&quot;</span> | <span class="string">&quot;arm64&quot;</span> | <span class="string">&quot;x86&quot;</span> | <span class="string">&quot;x86_64&quot;</span> | <span class="string">&quot;lp32&quot;</span> | <span class="string">&quot;lp64&quot;</span></span></span><br><span class="line">#</span><br><span class="line"># Note:</span><br><span class="line">#      - syscall_name corresponds to the name of the syscall, which may differ from</span><br><span class="line"><span class="meta">#        the exported function name (example: the exit syscall is implemented by the _exit()</span></span><br><span class="line"><span class="meta">#        function, which is not the same as the standard C exit() function which calls it)</span></span><br><span class="line">#</span><br><span class="line">#      - alias_list is optional comma separated <span class="built_in">list</span> of function aliases.</span><br><span class="line">#</span><br><span class="line">#      - The call_id parameter, given that func_name and syscall_name have</span><br><span class="line"><span class="meta">#        been provided, allows the user to specify dispatch style syscalls.</span></span><br><span class="line">#        For example, socket() syscall on i386 actually becomes:</span><br><span class="line"><span class="meta">#          socketcall(__NR_socket, 1, *(rest of args on stack)).</span></span><br><span class="line">#</span><br><span class="line">#      - Each parameter type is assumed to be stored in <span class="number">32</span> bits.</span><br><span class="line">#</span><br><span class="line"># This file is processed by a python script named gensyscalls.py, run via</span><br><span class="line"><span class="meta"># genrules in Android.bp.</span></span><br></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
@@ -140,6 +136,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2022/06/11/5W2H%E5%AD%A6%E4%B9%A0%E4%B8%80%E9%A1%B9%E6%8A%80%E6%9C%AF/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          如何学习一项技术
+        
+      </div>
+    </a>
   
   
     <a href="/2022/05/29/Linux-kernel-news/" id="article-nav-older" class="article-nav-link-wrap">
@@ -202,6 +207,14 @@
       <ul>
         
           <li>
+            <a href="/2022/06/11/%E5%AE%89%E5%8D%93%E4%BD%BF%E7%94%A8FUSE/">安卓使用FUSE</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/11/5W2H%E5%AD%A6%E4%B9%A0%E4%B8%80%E9%A1%B9%E6%8A%80%E6%9C%AF/">如何学习一项技术</a>
+          </li>
+        
+          <li>
             <a href="/2022/06/09/%E5%AE%89%E5%8D%93%E5%AD%98%E5%82%A8%E6%A0%88/">安卓存储栈</a>
           </li>
         
@@ -211,14 +224,6 @@
         
           <li>
             <a href="/2022/05/27/python%E5%BB%BA%E7%AB%8Bsocket-server-websocket-server/">python建立socket server(websocket server)</a>
-          </li>
-        
-          <li>
-            <a href="/2022/05/25/Linux%E5%92%8CWindows%E4%B8%8A%E9%9D%A2shell%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E5%AF%B9%E6%AF%94/">Linux和Windows上面shell基本操作对比</a>
-          </li>
-        
-          <li>
-            <a href="/2022/05/24/nodejs%E5%AE%9E%E7%8E%B0wss-secure-websocket-%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%8C%E4%B8%94%E6%B5%8F%E8%A7%88%E5%99%A8JavaScript%E5%AE%9E%E7%8E%B0wss-secure-websocket-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E4%B9%8B%E9%80%9A%E4%BF%A1/">nodejs实现wss(secure websocket)服务器，且浏览器JavaScript实现wss(secure websocket)客户端与之通信</a>
           </li>
         
       </ul>

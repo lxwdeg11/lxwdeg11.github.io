@@ -64,6 +64,94 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-edge-login-issue" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/05/09/edge-login-issue/" class="article-date">
+  <time datetime="2022-05-09T14:38:37.000Z" itemprop="datePublished">2022-05-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/05/09/edge-login-issue/">登录edge浏览器，报错0x80190001解决方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><p>关闭各种代理</p>
+</li>
+<li><p>设置当前网络的DNS，改用微软的4.2.2.1</p>
+<p>重试就可以了，之后记得改回原来的DNS，微软的DNS在访问一些国内网站时不好用</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/05/09/edge-login-issue/" data-id="cl2yty06i0000r8vkhb5b79jk" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/edge/" rel="tag">edge</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" rel="tag">浏览器</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-ftp" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/05/09/ftp/" class="article-date">
+  <time datetime="2022-05-09T14:38:37.000Z" itemprop="datePublished">2022-05-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/05/09/ftp/">登录edge浏览器，报错0x80190001解决方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="ubuntu服务器FTP"><a href="#ubuntu服务器FTP" class="headerlink" title="ubuntu服务器FTP"></a>ubuntu服务器FTP</h1><h6 id="开启FTP服务并重启"><a href="#开启FTP服务并重启" class="headerlink" title="开启FTP服务并重启"></a>开启FTP服务并重启</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service vsftpd restart</span><br></pre></td></tr></table></figure>
+
+<h6 id="查询FTP服务是否存在"><a href="#查询FTP服务是否存在" class="headerlink" title="查询FTP服务是否存在"></a>查询FTP服务是否存在</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -e | grep ftp</span><br></pre></td></tr></table></figure>
+
+<h6 id="增加用户后"><a href="#增加用户后" class="headerlink" title="增加用户后"></a>增加用户后</h6><p>在<code>/etc/allowed_user</code>文件里增加用户名</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/05/09/ftp/" data-id="cl2zj0r1q000260vkasb3d5t9" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ftpd/" rel="tag">ftpd</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-hexo" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/05/09/hexo/" class="article-date">
@@ -262,9 +350,29 @@
 
 
 
+<h1 id="block层调度器ops"><a href="#block层调度器ops" class="headerlink" title="block层调度器ops"></a>block层调度器ops</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">elevator_mq_ops</span> &#123;</span></span><br><span class="line">	<span class="type">int</span> (*init_sched)(<span class="keyword">struct</span> request_queue *, <span class="keyword">struct</span> elevator_type *);</span><br><span class="line">	<span class="type">void</span> (*exit_sched)(<span class="keyword">struct</span> elevator_queue *);</span><br><span class="line">	<span class="type">int</span> (*init_hctx)(<span class="keyword">struct</span> blk_mq_hw_ctx *, <span class="type">unsigned</span> <span class="type">int</span>);</span><br><span class="line">	<span class="type">void</span> (*exit_hctx)(<span class="keyword">struct</span> blk_mq_hw_ctx *, <span class="type">unsigned</span> <span class="type">int</span>);</span><br><span class="line">	<span class="type">void</span> (*depth_updated)(<span class="keyword">struct</span> blk_mq_hw_ctx *);</span><br><span class="line"></span><br><span class="line">	<span class="type">bool</span> (*allow_merge)(<span class="keyword">struct</span> request_queue *, <span class="keyword">struct</span> request *, <span class="keyword">struct</span> bio *);</span><br><span class="line">	<span class="type">bool</span> (*bio_merge)(<span class="keyword">struct</span> request_queue *, <span class="keyword">struct</span> bio *, <span class="type">unsigned</span> <span class="type">int</span>);</span><br><span class="line">	<span class="type">int</span> (*request_merge)(<span class="keyword">struct</span> request_queue *q, <span class="keyword">struct</span> request **, <span class="keyword">struct</span> bio *);</span><br><span class="line">	<span class="type">void</span> (*request_merged)(<span class="keyword">struct</span> request_queue *, <span class="keyword">struct</span> request *, <span class="keyword">enum</span> elv_merge);</span><br><span class="line">	<span class="type">void</span> (*requests_merged)(<span class="keyword">struct</span> request_queue *, <span class="keyword">struct</span> request *, <span class="keyword">struct</span> request *);</span><br><span class="line">	<span class="type">void</span> (*limit_depth)(<span class="type">unsigned</span> <span class="type">int</span>, <span class="keyword">struct</span> blk_mq_alloc_data *);</span><br><span class="line">	<span class="type">void</span> (*prepare_request)(<span class="keyword">struct</span> request *);</span><br><span class="line">	<span class="type">void</span> (*finish_request)(<span class="keyword">struct</span> request *);</span><br><span class="line">	<span class="type">void</span> (*insert_requests)(<span class="keyword">struct</span> blk_mq_hw_ctx *, <span class="keyword">struct</span> list_head *, <span class="type">bool</span>);</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">request</span> *(*<span class="title">dispatch_request</span>)(<span class="keyword">struct</span> <span class="title">blk_mq_hw_ctx</span> *);</span></span><br><span class="line">	<span class="type">bool</span> (*has_work)(<span class="keyword">struct</span> blk_mq_hw_ctx *);</span><br><span class="line">	<span class="type">void</span> (*completed_request)(<span class="keyword">struct</span> request *, u64);</span><br><span class="line">	<span class="type">void</span> (*requeue_request)(<span class="keyword">struct</span> request *);</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">request</span> *(*<span class="title">former_request</span>)(<span class="keyword">struct</span> <span class="title">request_queue</span> *, <span class="keyword">struct</span> <span class="title">request</span> *);</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">request</span> *(*<span class="title">next_request</span>)(<span class="keyword">struct</span> <span class="title">request_queue</span> *, <span class="keyword">struct</span> <span class="title">request</span> *);</span></span><br><span class="line">	<span class="type">void</span> (*init_icq)(<span class="keyword">struct</span> io_cq *);</span><br><span class="line">	<span class="type">void</span> (*exit_icq)(<span class="keyword">struct</span> io_cq *);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 
-<h1 id="哪些种类IO有rq-gt-end-io指针？"><a href="#哪些种类IO有rq-gt-end-io指针？" class="headerlink" title="哪些种类IO有rq-&gt;end_io指针？"></a>哪些种类IO有rq-&gt;end_io指针？</h1><h1 id="可能优化点："><a href="#可能优化点：" class="headerlink" title="可能优化点："></a>可能优化点：</h1><h2 id="workqueue优化"><a href="#workqueue优化" class="headerlink" title="workqueue优化"></a>workqueue优化</h2><h3 id="采用多个workqueue"><a href="#采用多个workqueue" class="headerlink" title="采用多个workqueue"></a>采用多个workqueue</h3><h4 id="不同优先级的IO，采用不同优先级的workqueue？"><a href="#不同优先级的IO，采用不同优先级的workqueue？" class="headerlink" title="不同优先级的IO，采用不同优先级的workqueue？"></a>不同优先级的IO，采用不同优先级的workqueue？</h4>
+
+<p>bool (*bio_merge)(struct request_queue *, struct bio *, unsigned int);</p>
+<p>bio转化为request之前，尝试与现有的request合并。</p>
+<p>int (*request_merge)(struct request_queue *q, struct request **, struct bio *);</p>
+<p>把BIO合并到现有的request中，如果合并成功，则把request指针存到struct request **中。</p>
+<p>void (*request_merged)(struct request_queue *, struct request *, enum elv_merge);</p>
+<p>上面BIO合并到一个request后，如果这个新的request可能跟前面或者后面的request可以合并（见attempt_front_merge和attempt_back_merge），则合并后的处理函数为  request_merged。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">static struct request *attempt_back_merge(struct request_queue *q,</span><br><span class="line">		struct request *rq)</span><br><span class="line">&#123;</span><br><span class="line">	struct request *next = elv_latter_request(q, rq);</span><br><span class="line"></span><br><span class="line">	if (next)</span><br><span class="line">		return attempt_merge(q, rq, next);</span><br><span class="line"></span><br><span class="line">	return NULL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static struct request *attempt_front_merge(struct request_queue *q,</span><br><span class="line">		struct request *rq)</span><br><span class="line">&#123;</span><br><span class="line">	struct request *prev = elv_former_request(q, rq);</span><br><span class="line"></span><br><span class="line">	if (prev)</span><br><span class="line">		return attempt_merge(q, prev, rq);</span><br><span class="line"></span><br><span class="line">	return NULL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>void (*requests_merged)(struct request_queue *, struct request *, struct request *);</p>
+<p>request插入到调度器队列里面时，尝试遍历队列里request，找到能合并的request。</p>
+<p>例如</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> * Callback function that is invoked after @next has been merged into @req.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">dd_merged_requests</span><span class="params">(<span class="keyword">struct</span> request_queue *q, <span class="keyword">struct</span> request *req,</span></span><br><span class="line"><span class="params">			       <span class="keyword">struct</span> request *next)</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">dd_insert_request</span><br><span class="line">	blk_mq_sched_try_insert_merge</span><br><span class="line">		elv_attempt_insert_merge</span><br><span class="line">			blk_attempt_req_merge</span><br><span class="line">				attempt_merge</span><br><span class="line">					elv_merge_requests</span><br><span class="line"> </span><br><span class="line"><span class="type">void</span> <span class="title function_">elv_merge_requests</span><span class="params">(<span class="keyword">struct</span> request_queue *q, <span class="keyword">struct</span> request *rq,</span></span><br><span class="line"><span class="params">			     <span class="keyword">struct</span> request *next)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">elevator_queue</span> *<span class="title">e</span> =</span> q-&gt;elevator;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (e-&gt;type-&gt;ops.requests_merged)</span><br><span class="line">		e-&gt;type-&gt;ops.requests_merged(q, rq, next);</span><br><span class="line"></span><br><span class="line">	elv_rqhash_reposition(q, rq);</span><br><span class="line">	q-&gt;last_merge = rq;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果可以合并，则作用是：next合并到req后，调度器需要做的处理；</p>
+<h2 id="bio-merge与request-merge区别？"><a href="#bio-merge与request-merge区别？" class="headerlink" title="bio_merge与request_merge区别？"></a>bio_merge与request_merge区别？</h2><h1 id="哪些种类IO有rq-gt-end-io指针？"><a href="#哪些种类IO有rq-gt-end-io指针？" class="headerlink" title="哪些种类IO有rq-&gt;end_io指针？"></a>哪些种类IO有rq-&gt;end_io指针？</h1><h1 id="可能优化点："><a href="#可能优化点：" class="headerlink" title="可能优化点："></a>可能优化点：</h1><h2 id="workqueue优化"><a href="#workqueue优化" class="headerlink" title="workqueue优化"></a>workqueue优化</h2><h3 id="采用多个workqueue"><a href="#采用多个workqueue" class="headerlink" title="采用多个workqueue"></a>采用多个workqueue</h3><h4 id="不同优先级的IO，采用不同优先级的workqueue？"><a href="#不同优先级的IO，采用不同优先级的workqueue？" class="headerlink" title="不同优先级的IO，采用不同优先级的workqueue？"></a>不同优先级的IO，采用不同优先级的workqueue？</h4>
       
     </div>
     <footer class="article-footer">
@@ -527,50 +635,11 @@
 
 
   
-    <article id="post-My-New-Post" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/09/28/My-New-Post/" class="article-date">
-  <time datetime="2019-09-27T17:07:42.000Z" itemprop="datePublished">2019-09-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/09/28/My-New-Post/">My First Post</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这是我的第一篇博客，很高兴认识大家，谢谢！</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2019/09/28/My-New-Post/" data-id="cl2zj0r1e000060vk3g5f8t49" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hello-World/" rel="tag">Hello World</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -623,6 +692,14 @@
       <ul>
         
           <li>
+            <a href="/2022/06/11/%E5%AE%89%E5%8D%93%E4%BD%BF%E7%94%A8FUSE/">安卓使用FUSE</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/11/5W2H%E5%AD%A6%E4%B9%A0%E4%B8%80%E9%A1%B9%E6%8A%80%E6%9C%AF/">如何学习一项技术</a>
+          </li>
+        
+          <li>
             <a href="/2022/06/09/%E5%AE%89%E5%8D%93%E5%AD%98%E5%82%A8%E6%A0%88/">安卓存储栈</a>
           </li>
         
@@ -632,14 +709,6 @@
         
           <li>
             <a href="/2022/05/27/python%E5%BB%BA%E7%AB%8Bsocket-server-websocket-server/">python建立socket server(websocket server)</a>
-          </li>
-        
-          <li>
-            <a href="/2022/05/25/Linux%E5%92%8CWindows%E4%B8%8A%E9%9D%A2shell%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E5%AF%B9%E6%AF%94/">Linux和Windows上面shell基本操作对比</a>
-          </li>
-        
-          <li>
-            <a href="/2022/05/24/nodejs%E5%AE%9E%E7%8E%B0wss-secure-websocket-%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%8C%E4%B8%94%E6%B5%8F%E8%A7%88%E5%99%A8JavaScript%E5%AE%9E%E7%8E%B0wss-secure-websocket-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E4%B9%8B%E9%80%9A%E4%BF%A1/">nodejs实现wss(secure websocket)服务器，且浏览器JavaScript实现wss(secure websocket)客户端与之通信</a>
           </li>
         
       </ul>
