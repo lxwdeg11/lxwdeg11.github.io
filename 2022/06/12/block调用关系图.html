@@ -16,6 +16,10 @@
 		attempt_merge --> attempt_front_merge
 		attempt_merge --> blk_attempt_req_merge
 		blk_attempt_req_merge --> elv_attempt_insert_merge --> blk_mq_sched_try_insert_merge --> dd_insert_request
+		blk_mq_sched_try_insert_merge --> bfq_insert_request
+		attempt_back_merge --> blk_mq_sched_try_merge
+		blk_mq_sched_try_merge --> bfq_bio_merge
+		blk_mq_sched_try_merge --> dd_bio_merge
 	
 		
     </div>
