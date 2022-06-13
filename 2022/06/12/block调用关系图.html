@@ -11,6 +11,7 @@
 						 struct request *next)"];
 		attempt_merge["static struct request *attempt_merge(struct request_queue *q,
 							 struct request *req, struct request *next)"]
+		attempt_front_merge["e->type->ops.former_request(q, rq);尝试和调度器队列前面的请求合并"]
 		elv_merge_requests --> attempt_merge
 		attempt_merge --> attempt_back_merge
 		attempt_merge --> attempt_front_merge
