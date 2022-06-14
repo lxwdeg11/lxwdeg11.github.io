@@ -12,6 +12,7 @@
 		attempt_merge["static struct request *attempt_merge(struct request_queue *q,
 							 struct request *req, struct request *next)"]
 		
+		
 		elv_merge_requests --> attempt_merge
 		attempt_merge --> attempt_back_merge
 		attempt_merge --> attempt_front_merge
@@ -32,10 +33,12 @@
 
     And here is another:
     <div class="mermaid">
-      graph TD
-      A[Client] -->|tcp_123| B(Load Balancer)
-      B -->|tcp_456| C[Server1]
-      B -->|tcp_456| D[Server2]
+      graph BT;
+      
+	  insert_requests["void (*insert_requests)(struct blk_mq_hw_ctx *, struct list_head *, bool);"]
+	  insert_requests --> blk_mq_sched_insert_request
+	  insert_requests --> blk_mq_sched_insert_requests
+	  
     </div>
   </body>
 </html>
