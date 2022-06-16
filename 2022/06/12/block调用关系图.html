@@ -27,8 +27,21 @@
 		blk_mq_sched_try_merge --> dd_bio_merge
 		
 		
+		
+		
 	
 		
+    </div>
+	And here is another:
+	<div class="mermaid">
+      graph BT;
+      
+	  insert_requests --> blk_mq_sched_insert_request
+		blk_mq_sched_insert_request --> blk_execute_rq_nowait
+		blk_mq_sched_insert_request --> blk_mq_requeue_work
+		blk_mq_sched_insert_request --> __blk_mq_try_issue_directly
+		blk_mq_sched_insert_request --> blk_mq_submit_bio
+	  
     </div>
 
     And here is another:
