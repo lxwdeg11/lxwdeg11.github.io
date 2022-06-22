@@ -5,20 +5,18 @@
   
 
   
-  <title>Linux kernel news | 莫失莫忘的博客</title>
+  <title>莫失莫忘的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Storage [Linux Storage Linux &amp; Open-Source News - Phoronix](https:&#x2F;&#x2F;www.phoronix.com&#x2F;scan.php?page&#x3D;news_topic&amp;q&#x3D;Linux Storage) 查看内核storage部分的变化。  LinuxVersions - Linux Kernel Newbies 查看内核各个版本的">
+  <meta name="description" content="ufs_dev_wlun_template如何与sdev_ufs_device匹配？static struct scsi_driver ufs_dev_wlun_template sd_template这个driver是如何绑定的？scsi_bus_suspend_common后blk set pm only那么，sync cache怎么发送？sync cache带RQF_PM标记kthread_">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux kernel news">
-<meta property="og:url" content="http://example.com/2022/05/29/Linux-kernel-news/index.html">
+<meta property="og:title" content="莫失莫忘的博客">
+<meta property="og:url" content="http://example.com/2022/06/22/ufs%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%96%91%E9%97%AE/index.html">
 <meta property="og:site_name" content="莫失莫忘的博客">
-<meta property="og:description" content="Storage [Linux Storage Linux &amp; Open-Source News - Phoronix](https:&#x2F;&#x2F;www.phoronix.com&#x2F;scan.php?page&#x3D;news_topic&amp;q&#x3D;Linux Storage) 查看内核storage部分的变化。  LinuxVersions - Linux Kernel Newbies 查看内核各个版本的">
+<meta property="og:description" content="ufs_dev_wlun_template如何与sdev_ufs_device匹配？static struct scsi_driver ufs_dev_wlun_template sd_template这个driver是如何绑定的？scsi_bus_suspend_common后blk set pm only那么，sync cache怎么发送？sync cache带RQF_PM标记kthread_">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-05-29T03:29:12.000Z">
-<meta property="article:modified_time" content="2022-05-29T03:36:06.947Z">
+<meta property="article:published_time" content="2022-06-22T14:17:52.105Z">
+<meta property="article:modified_time" content="2022-06-22T15:14:25.436Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="kernel">
-<meta property="article:tag" content="storage">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="莫失莫忘的博客" type="application/atom+xml">
@@ -68,64 +66,36 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-Linux-kernel-news" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-ufs内核代码疑问" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2022/05/29/Linux-kernel-news/" class="article-date">
-  <time datetime="2022-05-29T03:29:12.000Z" itemprop="datePublished">2022-05-29</time>
+    <a href="/2022/06/22/ufs%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%96%91%E9%97%AE/" class="article-date">
+  <time datetime="2022-06-22T14:17:52.105Z" itemprop="datePublished">2022-06-22</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      Linux kernel news
-    </h1>
-  
-
-      </header>
-    
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Storage"><a href="#Storage" class="headerlink" title="Storage"></a>Storage</h1><ul>
-<li><p>[Linux Storage Linux &amp; Open-Source News - Phoronix](<a target="_blank" rel="noopener" href="https://www.phoronix.com/scan.php?page=news_topic&amp;q=Linux">https://www.phoronix.com/scan.php?page=news_topic&amp;q=Linux</a> Storage) 查看内核storage部分的变化。</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://kernelnewbies.org/LinuxVersions">LinuxVersions - Linux Kernel Newbies</a> 查看内核各个版本的差异，其中file system，block layer和drivers的storage跟存储有关。</p>
-</li>
-<li><p>[LWN.net Weekly Edition Archives <a target="_blank" rel="noopener" href="https://lwn.net/Archives/">LWN.net]</a>, LWN每周的归档，可以查找storage的变化。</p>
-</li>
-</ul>
-
+        <h1 id="ufs-dev-wlun-template如何与sdev-ufs-device匹配？"><a href="#ufs-dev-wlun-template如何与sdev-ufs-device匹配？" class="headerlink" title="ufs_dev_wlun_template如何与sdev_ufs_device匹配？"></a>ufs_dev_wlun_template如何与sdev_ufs_device匹配？</h1><p>static struct scsi_driver ufs_dev_wlun_template</p>
+<h1 id="sd-template这个driver是如何绑定的？"><a href="#sd-template这个driver是如何绑定的？" class="headerlink" title="sd_template这个driver是如何绑定的？"></a>sd_template这个driver是如何绑定的？</h1><h1 id="scsi-bus-suspend-common后blk-set-pm-only那么，sync-cache怎么发送？"><a href="#scsi-bus-suspend-common后blk-set-pm-only那么，sync-cache怎么发送？" class="headerlink" title="scsi_bus_suspend_common后blk set pm only那么，sync cache怎么发送？"></a>scsi_bus_suspend_common后blk set pm only那么，sync cache怎么发送？</h1><h2 id="sync-cache带RQF-PM标记"><a href="#sync-cache带RQF-PM标记" class="headerlink" title="sync cache带RQF_PM标记"></a>sync cache带RQF_PM标记</h2><h1 id="kthread-run有哪些？"><a href="#kthread-run有哪些？" class="headerlink" title="kthread_run有哪些？"></a>kthread_run有哪些？</h1><h1 id="shost-gt-tmf-work-q？"><a href="#shost-gt-tmf-work-q？" class="headerlink" title="shost-&gt;tmf_work_q？"></a>shost-&gt;tmf_work_q？</h1><h1 id="scsi各种设备关系？"><a href="#scsi各种设备关系？" class="headerlink" title="scsi各种设备关系？"></a>scsi各种设备关系？</h1>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/05/29/Linux-kernel-news/" data-id="cl3qqwrtz0000rwvka8z778x1" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/22/ufs%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%96%91%E9%97%AE/" data-id="cl4pqls7t0000wwvkh1ba45cw" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/storage/" rel="tag">storage</a></li></ul>
-
     </footer>
   </div>
   
     
 <nav id="article-nav">
   
-    <a href="/2022/06/09/%E5%AE%89%E5%8D%93%E5%AD%98%E5%82%A8%E6%A0%88/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          安卓存储栈
-        
-      </div>
-    </a>
   
-  
-    <a href="/2022/05/27/python%E5%BB%BA%E7%AB%8Bsocket-server-websocket-server/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2022/06/11/%E5%AE%89%E5%8D%93%E4%BD%BF%E7%94%A8FUSE/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">python建立socket server(websocket server)</div>
+      <div class="article-nav-title">安卓使用FUSE</div>
     </a>
   
 </nav>
