@@ -56,14 +56,19 @@
 	
 	And here is another:
     <div class="mermaid">
-		classDiagram
-		class animal
-      graph TB;
-      
-	  insert_requests["void (*insert_requests)(struct blk_mq_hw_ctx *, struct list_head *, bool);"]
-	  insert_requests --> blk_mq_sched_insert_request
-	  insert_requests --> blk_mq_sched_insert_requests
+	classDiagram
+      class scsi_disk
+	  scsi_disk : scsi_driver
+	  scsi_disk : device
 	  
+	  class gendisk
+	  
+	  class scsi_driver
+	  scsi_driver: struct device_driver gendrv
+	  
+	  class scsi_device
+	  
+	  scsi_disk "struct scsi_device *" --> scsi_device
     </div>
   </body>
 </html>
