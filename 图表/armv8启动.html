@@ -1,0 +1,30 @@
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+
+    启动阶段:
+    <div class="mermaid">
+		graph LR;
+
+		BL1 --> BL2
+		BL2 --可选 支持EL3异常等级及secure monitor才有--> BL31 
+		BL2 --可选 支持TRUST OS才有--> BL32
+		BL2 --Bl33如uboot--> BL33
+	</div>
+	
+	ARM核复位后默认进入当前系统支持的最高异常等级。
+	ARM架构典型的启动流程:
+    <div class="mermaid">
+		graph LR;
+
+		
+		
+	</div>
+		
+		
+	
+		
+    
+  </body>
+</html>
