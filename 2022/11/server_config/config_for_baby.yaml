@@ -1,7 +1,7 @@
 #
 #-------------------------------------------------------------#
 #  创建者：https://v2rayse.com
-#  创建时间：2022-12-11 21:39:14
+#  创建时间：2022-12-11 21:42:06
 #  模版：v2rayse默认模版
 #  节点数量：1
 #-------------------------------------------------------------#
@@ -13,7 +13,7 @@ mode: Rule
 log-level: info
 external-controller: 0.0.0.0:9090
 proxies:
-  - {"type":"vmess","name":"233v2.com_43.201.150.211","server":"43.201.150.211","port":"61569","uuid":"78eb2776-922e-4ad9-9d7b-339057efa3f6","alterId":"0","cipher":"auto","network":"tcp"}
+  - {"type":"vmess","name":"233v2.com_43.201.150.211","http-opts":{"path":["/"],"headers":{"Host":["www.baidu.com"]}},"server":"43.201.150.211","port":"61569","uuid":"5b2b3035-ace1-49cf-aef2-2536b91df801","alterId":"0","cipher":"auto","network":"http"}
 proxy-groups:
   - name: 🚀 节点选择
     type: select
