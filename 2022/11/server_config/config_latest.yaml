@@ -1,7 +1,7 @@
 #
 #-------------------------------------------------------------#
 #  创建者：https://v2rayse.com
-#  创建时间：2022-12-11 21:42:06
+#  创建时间：2022-12-11 21:51:28
 #  模版：v2rayse默认模版
 #  节点数量：1
 #-------------------------------------------------------------#
@@ -13,46 +13,46 @@ mode: Rule
 log-level: info
 external-controller: 0.0.0.0:9090
 proxies:
-  - {"type":"vmess","name":"233v2.com_43.201.150.211","http-opts":{"path":["/"],"headers":{"Host":["www.baidu.com"]}},"server":"43.201.150.211","port":"61569","uuid":"5b2b3035-ace1-49cf-aef2-2536b91df801","alterId":"0","cipher":"auto","network":"http"}
+  - {"type":"vmess","name":"233v2.com_3.38.135.196","server":"3.38.135.196","port":"58458","uuid":"f38d550f-87d6-40b4-b343-65d5ef8d6075","alterId":"0","cipher":"auto","network":"tcp"}
 proxy-groups:
   - name: 🚀 节点选择
     type: select
     proxies:
       - ♻️ 自动选择
       - DIRECT
-      - 233v2.com_43.201.150.211
+      - 233v2.com_3.38.135.196
   - name: ♻️ 自动选择
     type: url-test
     url: http://www.gstatic.com/generate_204
     interval: 300
     tolerance: 50
     proxies:
-      - 233v2.com_43.201.150.211
+      - 233v2.com_3.38.135.196
   - name: 🌍 国外媒体
     type: select
     proxies:
       - 🚀 节点选择
       - ♻️ 自动选择
       - 🎯 全球直连
-      - 233v2.com_43.201.150.211
+      - 233v2.com_3.38.135.196
   - name: 📲 电报信息
     type: select
     proxies:
       - 🚀 节点选择
       - 🎯 全球直连
-      - 233v2.com_43.201.150.211
+      - 233v2.com_3.38.135.196
   - name: Ⓜ️ 微软服务
     type: select
     proxies:
       - 🎯 全球直连
       - 🚀 节点选择
-      - 233v2.com_43.201.150.211
+      - 233v2.com_3.38.135.196
   - name: 🍎 苹果服务
     type: select
     proxies:
       - 🚀 节点选择
       - 🎯 全球直连
-      - 233v2.com_43.201.150.211
+      - 233v2.com_3.38.135.196
   - name: 🎯 全球直连
     type: select
     proxies:
@@ -75,7 +75,7 @@ proxy-groups:
       - 🚀 节点选择
       - 🎯 全球直连
       - ♻️ 自动选择
-      - 233v2.com_43.201.150.211
+      - 233v2.com_3.38.135.196
 rules:
   - DOMAIN-SUFFIX,acl4.ssr,🎯 全球直连
   - DOMAIN-SUFFIX,ip6-localhost,🎯 全球直连
