@@ -1,7 +1,7 @@
 #
 #-------------------------------------------------------------#
 #  创建者：https://v2rayse.com
-#  创建时间：2022-12-10 09:25:58
+#  创建时间：2022-12-11 21:30:38
 #  模版：v2rayse默认模版
 #  节点数量：1
 #-------------------------------------------------------------#
@@ -13,47 +13,46 @@ mode: Rule
 log-level: info
 external-controller: 0.0.0.0:9090
 proxies:
-  - {"type":"vmess","name":"233v2.com_3.35.174.118","server":"3.35.174.118","port":"50505","uuid":"1435ccac-4a8d-4d89-8ef8-74c5ea7e7cf2","alterId":"0","cipher":"auto","network":"tcp"}
-  - {"type":"vmess","name":"quic_srtp_43.201.150.211","server":"43.201.150.211","port":"61569","uuid":"5a67a742-d517-4a16-9591-ebe4146d6398","alterId":"0","cipher":"srtp","network":"quic"}
+  - {"type":"vmess","name":"233v2.com_43.201.150.211","server":"43.201.150.211","port":"61569","uuid":"5a67a742-d517-4a16-9591-ebe4146d6398","alterId":"0","cipher":"auto","network":"quic"}
 proxy-groups:
   - name: 🚀 节点选择
     type: select
     proxies:
       - ♻️ 自动选择
       - DIRECT
-      - 233v2.com_3.35.174.118
+      - 233v2.com_43.201.150.211
   - name: ♻️ 自动选择
     type: url-test
     url: http://www.gstatic.com/generate_204
     interval: 300
     tolerance: 50
     proxies:
-      - 233v2.com_3.35.174.118
+      - 233v2.com_43.201.150.211
   - name: 🌍 国外媒体
     type: select
     proxies:
       - 🚀 节点选择
       - ♻️ 自动选择
       - 🎯 全球直连
-      - 233v2.com_3.35.174.118
+      - 233v2.com_43.201.150.211
   - name: 📲 电报信息
     type: select
     proxies:
       - 🚀 节点选择
       - 🎯 全球直连
-      - 233v2.com_3.35.174.118
+      - 233v2.com_43.201.150.211
   - name: Ⓜ️ 微软服务
     type: select
     proxies:
       - 🎯 全球直连
       - 🚀 节点选择
-      - 233v2.com_3.35.174.118
+      - 233v2.com_43.201.150.211
   - name: 🍎 苹果服务
     type: select
     proxies:
       - 🚀 节点选择
       - 🎯 全球直连
-      - 233v2.com_3.35.174.118
+      - 233v2.com_43.201.150.211
   - name: 🎯 全球直连
     type: select
     proxies:
@@ -76,7 +75,7 @@ proxy-groups:
       - 🚀 节点选择
       - 🎯 全球直连
       - ♻️ 自动选择
-      - 233v2.com_3.35.174.118
+      - 233v2.com_43.201.150.211
 rules:
   - DOMAIN-SUFFIX,acl4.ssr,🎯 全球直连
   - DOMAIN-SUFFIX,ip6-localhost,🎯 全球直连
