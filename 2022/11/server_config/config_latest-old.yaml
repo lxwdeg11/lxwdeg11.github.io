@@ -1,7 +1,7 @@
 ####################################
 # 创建者：v2rayse.com
 # 客户端：Clash
-# 创建时间：2023-04-23 21:23:37
+# 创建时间：2023-04-17 21:49:28
 # 使用模版：V2RaySE 默认模版
 # 节点数量：1
 ####################################
@@ -21,46 +21,46 @@ dns:
     - tls://dns.google:853
 
 proxies:
-  - {"name":"233v2.com_52.79.104.225","type":"vmess","server":"52.79.104.225","port":49584,"cipher":"auto","uuid":"5bb8bfba-f8e5-4d30-a31b-63fcf8c63158","alterId":0,"tls":false,"skip-cert-verify":true,"network":"tcp"}
+  - {"name":"233v2.com_54.180.140.52","type":"vmess","server":"54.180.140.52","port":49584,"cipher":"auto","uuid":"af8f9452-2742-4607-8a01-155fc77dca70","alterId":0,"tls":false,"skip-cert-verify":true,"network":"tcp"}
 proxy-groups:
   - name: 🚀 节点选择
     type: select
     proxies:
       - ♻️ 自动选择
       - DIRECT
-      - 233v2.com_52.79.104.225
+      - 233v2.com_54.180.140.52
   - name: ♻️ 自动选择
     type: url-test
     url: http://www.gstatic.com/generate_204
     interval: 300
     tolerance: 50
     proxies:
-      - 233v2.com_52.79.104.225
+      - 233v2.com_54.180.140.52
   - name: 🌍 国外媒体
     type: select
     proxies:
       - 🚀 节点选择
       - ♻️ 自动选择
       - 🎯 全球直连
-      - 233v2.com_52.79.104.225
+      - 233v2.com_54.180.140.52
   - name: 📲 电报信息
     type: select
     proxies:
       - 🚀 节点选择
       - 🎯 全球直连
-      - 233v2.com_52.79.104.225
+      - 233v2.com_54.180.140.52
   - name: Ⓜ️ 微软服务
     type: select
     proxies:
       - 🎯 全球直连
       - 🚀 节点选择
-      - 233v2.com_52.79.104.225
+      - 233v2.com_54.180.140.52
   - name: 🍎 苹果服务
     type: select
     proxies:
       - 🚀 节点选择
       - 🎯 全球直连
-      - 233v2.com_52.79.104.225
+      - 233v2.com_54.180.140.52
   - name: 🎯 全球直连
     type: select
     proxies:
@@ -83,7 +83,7 @@ proxy-groups:
       - 🚀 节点选择
       - 🎯 全球直连
       - ♻️ 自动选择
-      - 233v2.com_52.79.104.225
+      - 233v2.com_54.180.140.52
 
 rules:
 # 本地/局域网地址
