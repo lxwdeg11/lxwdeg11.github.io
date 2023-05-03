@@ -5,27 +5,27 @@ mode: Rule
 log-level: info
 external-controller: :9090
 proxies:
-  - {name: 233v2.com_13.212.2.81, server: 13.212.2.81, port: 39734, type: vmess, uuid: 9aa3c7b7-6248-4a8e-a7b7-56e6e5b6075b, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 233v2.com_13.250.5.137, server: 13.250.5.137, port: 47506, type: vmess, uuid: ac0c91ac-63a9-41cf-97cb-e75bd6f79100, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
 proxy-groups:
   - name: 🔰 节点选择
     type: select
     proxies:
       - ♻️ 自动选择
       - 🎯 全球直连
-      - 233v2.com_13.212.2.81
+      - 233v2.com_13.250.5.137
   - name: ♻️ 自动选择
     type: url-test
     url: http://www.gstatic.com/generate_204
     interval: 300
     proxies:
-      - 233v2.com_13.212.2.81
+      - 233v2.com_13.250.5.137
   - name: 🎥 NETFLIX
     type: select
     proxies:
       - 🔰 节点选择
       - ♻️ 自动选择
       - 🎯 全球直连
-      - 233v2.com_13.212.2.81
+      - 233v2.com_13.250.5.137
   - name: ⛔️ 广告拦截
     type: select
     proxies:
@@ -44,7 +44,7 @@ proxy-groups:
       - 🔰 节点选择
       - ♻️ 自动选择
       - 🎯 全球直连
-      - 233v2.com_13.212.2.81
+      - 233v2.com_13.250.5.137
   - name: 🌏 国内媒体
     type: select
     proxies:
@@ -55,20 +55,20 @@ proxy-groups:
     proxies:
       - 🎯 全球直连
       - 🔰 节点选择
-      - 233v2.com_13.212.2.81
+      - 233v2.com_13.250.5.137
   - name: 📲 电报信息
     type: select
     proxies:
       - 🔰 节点选择
       - 🎯 全球直连
-      - 233v2.com_13.212.2.81
+      - 233v2.com_13.250.5.137
   - name: 🍎 苹果服务
     type: select
     proxies:
       - 🔰 节点选择
       - 🎯 全球直连
       - ♻️ 自动选择
-      - 233v2.com_13.212.2.81
+      - 233v2.com_13.250.5.137
   - name: 🎯 全球直连
     type: select
     proxies:
@@ -84,7 +84,7 @@ proxy-groups:
       - 🔰 节点选择
       - 🎯 全球直连
       - ♻️ 自动选择
-      - 233v2.com_13.212.2.81
+      - 233v2.com_13.250.5.137
 rules:
  - DOMAIN-SUFFIX,local,🎯 全球直连
  - IP-CIDR,192.168.0.0/16,🎯 全球直连,no-resolve
