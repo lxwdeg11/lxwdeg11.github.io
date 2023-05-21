@@ -5,27 +5,27 @@ mode: Rule
 log-level: info
 external-controller: :9090
 proxies:
-  - {name: 233boy-tcp-18.143.150.127, server: 18.143.150.127, port: 49044, type: vmess, uuid: 1b922501-7f2b-4784-bfad-ad366b34958b, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 233boy-tcp-13.125.110.96, server: 13.125.110.96, port: 29195, type: vmess, uuid: a2a4f079-5657-4fcc-9726-1a551c45c3e9, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
 proxy-groups:
   - name: 🔰 节点选择
     type: select
     proxies:
       - ♻️ 自动选择
       - 🎯 全球直连
-      - 233boy-tcp-18.143.150.127
+      - 233boy-tcp-13.125.110.96
   - name: ♻️ 自动选择
     type: url-test
     url: http://www.gstatic.com/generate_204
     interval: 300
     proxies:
-      - 233boy-tcp-18.143.150.127
+      - 233boy-tcp-13.125.110.96
   - name: 🎥 NETFLIX
     type: select
     proxies:
       - 🔰 节点选择
       - ♻️ 自动选择
       - 🎯 全球直连
-      - 233boy-tcp-18.143.150.127
+      - 233boy-tcp-13.125.110.96
   - name: ⛔️ 广告拦截
     type: select
     proxies:
@@ -44,7 +44,7 @@ proxy-groups:
       - 🔰 节点选择
       - ♻️ 自动选择
       - 🎯 全球直连
-      - 233boy-tcp-18.143.150.127
+      - 233boy-tcp-13.125.110.96
   - name: 🌏 国内媒体
     type: select
     proxies:
@@ -55,20 +55,20 @@ proxy-groups:
     proxies:
       - 🎯 全球直连
       - 🔰 节点选择
-      - 233boy-tcp-18.143.150.127
+      - 233boy-tcp-13.125.110.96
   - name: 📲 电报信息
     type: select
     proxies:
       - 🔰 节点选择
       - 🎯 全球直连
-      - 233boy-tcp-18.143.150.127
+      - 233boy-tcp-13.125.110.96
   - name: 🍎 苹果服务
     type: select
     proxies:
       - 🔰 节点选择
       - 🎯 全球直连
       - ♻️ 自动选择
-      - 233boy-tcp-18.143.150.127
+      - 233boy-tcp-13.125.110.96
   - name: 🎯 全球直连
     type: select
     proxies:
@@ -84,7 +84,7 @@ proxy-groups:
       - 🔰 节点选择
       - 🎯 全球直连
       - ♻️ 自动选择
-      - 233boy-tcp-18.143.150.127
+      - 233boy-tcp-13.125.110.96
 rules:
  - DOMAIN-SUFFIX,local,🎯 全球直连
  - IP-CIDR,192.168.0.0/16,🎯 全球直连,no-resolve
